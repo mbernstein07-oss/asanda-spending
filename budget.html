@@ -240,6 +240,51 @@
       color: var(--accent);
       font-weight: 600;
     }
+
+    .budget-total-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--accent);
+      border-radius: var(--radius);
+      margin-top: 16px;
+    }
+    .budget-total-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .budget-total-amount {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .budget-total-note {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.75);
+      margin-top: 2px;
+    }
+
+    /* Summary stat cards */
+    .budget-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 4px;
+    }
+    .budget-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .budget-stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .budget-stat-value { font-size: 1.45rem; font-weight: 700; color: var(--accent); margin-top: 4px; line-height: 1.15; }
+    .budget-stat-sub   { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
   </style>
 </head>
 <body>
@@ -256,6 +301,25 @@
 
   <div class="photo-card">
     <img src="./budget-photo.jpg" alt="Asanda's handwritten monthly budget breakdown" />
+  </div>
+
+  <!-- Summary stats -->
+  <div class="budget-stats">
+    <div class="budget-stat">
+      <div class="budget-stat-label">Est. Monthly Total</div>
+      <div class="budget-stat-value">R6,080</div>
+      <div class="budget-stat-sub">fixed + transport est.</div>
+    </div>
+    <div class="budget-stat">
+      <div class="budget-stat-label">Fixed Expenses</div>
+      <div class="budget-stat-value">R3,480</div>
+      <div class="budget-stat-sub">medication · electricity · food · toiletries</div>
+    </div>
+    <div class="budget-stat">
+      <div class="budget-stat-label">Transport (est.)</div>
+      <div class="budget-stat-value">R2,600</div>
+      <div class="budget-stat-sub">R200/day · ×3 days · ×4.33 wks</div>
+    </div>
   </div>
 
   <!-- Transcription -->
@@ -317,6 +381,14 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="budget-total-row">
+      <div>
+        <div class="budget-total-label">Estimated Monthly Total</div>
+        <div class="budget-total-note">transport estimated at R200/day × 3 days/week × 4.33 weeks</div>
+      </div>
+      <div class="budget-total-amount">R6,080</div>
     </div>
 
     <div class="budget-savings">

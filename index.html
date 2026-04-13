@@ -349,7 +349,9 @@ function renderCharts(rows) {
     const [y, mo] = m.split('-');
     return allYears ? `${MONTH_NAMES[parseInt(mo)-1]} '${y.slice(2)}` : MONTH_NAMES[parseInt(mo)-1];
   });
-  const barColors = months.map(m => m.startsWith('2025') ? '#2d7a4f' : '#5bb87a');
+  const barColors = months.map(m =>
+    m.startsWith('2024') ? '#1a4d32' : m.startsWith('2025') ? '#2d7a4f' : '#5bb87a'
+  );
 
   // Bar chart — USD per month
   if (barInst) barInst.destroy();

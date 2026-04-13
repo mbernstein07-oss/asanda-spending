@@ -240,6 +240,10 @@
       <h3>Monthly Medical Aid</h3>
       <canvas id="medAidChart"></canvas>
     </div>
+    <div class="chart-wrap full">
+      <h3>Top Up — Amount per Transfer</h3>
+      <canvas id="topUpAmtChart"></canvas>
+    </div>
   </div>
 
   <!-- Table -->
@@ -285,7 +289,7 @@ let currentYear = 2026;
 let allYears = true;  // default
 let sortCol = 'date';
 let sortDir = -1;
-let topUpInst, medAidInst, rateInst, cumulativeInst;
+let topUpInst, topUpAmtInst, medAidInst, rateInst, cumulativeInst;
 
 const NAV_KEY = 'asanda_nav';
 
@@ -529,7 +533,8 @@ function renderCharts(rows) {
       }
     }
   });
-  medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
+  medAidInst  = buildDailyLine('medAidChart',    medAidInst,  'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
+  topUpAmtInst = buildDailyLine('topUpAmtChart', topUpAmtInst, 'Top Up Amount',       t => t.usd <= 200, '#2d7a4f', false);
 
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
@@ -563,6 +568,7 @@ function renderCharts(rows) {
   [
     ['topUpChart',      () => topUpInst],
     ['medAidChart',     () => medAidInst],
+    ['topUpAmtChart',   () => topUpAmtInst],
     ['cumulativeChart', () => cumulativeInst],
     ['rateChart',       () => rateInst],
   ].forEach(([id, getter]) => {

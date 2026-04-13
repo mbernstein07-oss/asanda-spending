@@ -244,10 +244,6 @@
       <h3>Cumulative USD Sent</h3>
       <canvas id="cumulativeChart"></canvas>
     </div>
-    <div class="chart-wrap full">
-      <h3>Exchange Rate Trend (ZAR/USD)</h3>
-      <canvas id="rateChart"></canvas>
-    </div>
   </div>
 
   <!-- Table -->
@@ -274,17 +270,41 @@
     </div>
   </div>
 
+  <!-- Exchange Rate — bottom -->
+  <div class="chart-wrap">
+    <h3>Exchange Rate Trend (ZAR/USD)</h3>
+    <canvas id="rateChart"></canvas>
+  </div>
+
 </div>
 
 <script>
 let transfers = [];
 let currentYear = 2026;
-let allYears = false;
+let allYears = true;  // default
 let sortCol = 'date';
 let sortDir = -1;
 let topUpInst, medAidInst, rateInst, cumulativeInst;
 
+const NAV_KEY = 'asanda_nav';
+
+function saveNavState() {
+  localStorage.setItem(NAV_KEY, JSON.stringify({ allYears, currentYear }));
+}
+
+function loadNavState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(NAV_KEY));
+    if (saved !== null && saved !== undefined) {
+      allYears = saved.allYears;
+      currentYear = saved.currentYear || 2026;
+    }
+    // else: keep defaults (allYears = true)
+  } catch {}
+}
+
 async function init() {
+  loadNavState();
   const res = await fetch('./data.json?_=' + Date.now());
   transfers = await res.json();
   renderAll();
@@ -374,13 +394,22 @@ function renderCharts(rows) {
       m.startsWith('2025') ? color :
       shadeColor(color, 25)
     );
+    const trend = linearRegression(vals);
     if (inst) inst.destroy();
     return new Chart(document.getElementById(canvasId), {
       type: 'bar',
-      data: { labels: monthLabels, datasets: [{ label, data: vals, backgroundColor: colors, borderRadius: 5 }] },
+      data: {
+        labels: monthLabels,
+        datasets: [
+          { type: 'bar',  label, data: vals, backgroundColor: colors, borderRadius: 5 },
+          { type: 'line', label: 'Trend', data: trend,
+            borderColor: 'rgba(255,255,255,0.55)', borderWidth: 2, borderDash: [4, 3],
+            pointRadius: 0, tension: 0.3, fill: false, order: 0 }
+        ]
+      },
       options: {
         responsive: true,
-        plugins: { legend: { display: false }, tooltip: tooltipUSD },
+        plugins: { legend: { display: false }, tooltip: { filter: item => item.datasetIndex === 0, callbacks: tooltipUSD.callbacks } },
         scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
       }
     });
@@ -426,6 +455,18 @@ function shadeColor(hex, pct) {
   return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
 }
 
+function linearRegression(vals) {
+  const n = vals.length;
+  if (n < 2) return vals.slice();
+  const sumX  = (n * (n - 1)) / 2;
+  const sumX2 = (n * (n - 1) * (2 * n - 1)) / 6;
+  const sumY  = vals.reduce((a, b) => a + b, 0);
+  const sumXY = vals.reduce((s, v, i) => s + i * v, 0);
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+  return vals.map((_, i) => +(intercept + slope * i).toFixed(2));
+}
+
 function renderTable(rows) {
   const sorted = [...rows].sort((a, b) => {
     let av = a[sortCol], bv = b[sortCol];
@@ -466,18 +507,18 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
     else { sortCol = col; sortDir = col === 'date' ? -1 : -1; }
     document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
     th.classList.add('sorted');
-    renderTable(yearTransfers());
+    renderTable(activeTransfers());
   });
 });
 
 // ── Year nav ──────────────────────────────────────────────────────────────────
-document.getElementById('prevYear').addEventListener('click', () => { allYears = false; currentYear--; renderAll(); });
-document.getElementById('nextYear').addEventListener('click', () => { allYears = false; currentYear++; renderAll(); });
-document.getElementById('allYearsBtn').addEventListener('click', () => { allYears = !allYears; renderAll(); });
+document.getElementById('prevYear').addEventListener('click', () => { allYears = false; currentYear--; saveNavState(); renderAll(); });
+document.getElementById('nextYear').addEventListener('click', () => { allYears = false; currentYear++; saveNavState(); renderAll(); });
+document.getElementById('allYearsBtn').addEventListener('click', () => { allYears = !allYears; saveNavState(); renderAll(); });
 
 // ── Export ────────────────────────────────────────────────────────────────────
 document.getElementById('exportBtn').addEventListener('click', () => {
-  const rows = yearTransfers().sort((a,b) => a.date.localeCompare(b.date));
+  const rows = activeTransfers().sort((a,b) => a.date.localeCompare(b.date));
   const lines = [
     'Date,Type,USD Sent,ZAR Received,Rate (ZAR/USD),Fee,Reference',
     ...rows.map(t => {

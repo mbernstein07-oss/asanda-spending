@@ -364,6 +364,7 @@ function renderStats(rows) {
 function renderCharts(rows) {
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const tooltipUSD = { callbacks: { label: ctx => ` $${parseFloat(ctx.parsed.y).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}` } };
+  const yUSD = { ticks: { callback: v => '$' + v.toLocaleString() } };
 
   function dateLabel(dateStr) {
     const [y, m, d] = dateStr.split('-');
@@ -530,22 +531,6 @@ function renderCharts(rows) {
   });
   medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
 
-  // Dismiss stuck tooltips on all charts when mouse leaves canvas
-  [
-    ['topUpChart',    () => topUpInst],
-    ['medAidChart',   () => medAidInst],
-    ['cumulativeChart', () => cumulativeInst],
-    ['rateChart',     () => rateInst],
-  ].forEach(([id, getter]) => {
-    const el = document.getElementById(id);
-    el.onmouseleave = () => {
-      const inst = getter();
-      if (!inst) return;
-      inst.tooltip.setActiveElements([], {});
-      inst.update('none');
-    };
-  });
-
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
   let cum = 0;
@@ -572,6 +557,21 @@ function renderCharts(rows) {
       borderColor: '#5bb87a', backgroundColor: 'rgba(91,184,122,0.1)',
       fill: true, tension: 0.3, pointRadius: 2, pointBackgroundColor: '#5bb87a' }] },
     options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => 'R' + v } } } }
+  });
+
+  // Dismiss stuck tooltips — must run after all chart instances are created
+  [
+    ['topUpChart',      () => topUpInst],
+    ['medAidChart',     () => medAidInst],
+    ['cumulativeChart', () => cumulativeInst],
+    ['rateChart',       () => rateInst],
+  ].forEach(([id, getter]) => {
+    document.getElementById(id).onmouseleave = () => {
+      const inst = getter();
+      if (!inst) return;
+      inst.tooltip.setActiveElements([], {});
+      inst.update('none');
+    };
   });
 }
 

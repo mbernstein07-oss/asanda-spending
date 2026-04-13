@@ -241,7 +241,7 @@
       <canvas id="medAidChart"></canvas>
     </div>
     <div class="chart-wrap full">
-      <h3>Top Up — Amount per Transfer</h3>
+      <h3>Top Up — Monthly Total</h3>
       <canvas id="topUpAmtChart"></canvas>
     </div>
   </div>
@@ -382,6 +382,72 @@ function renderCharts(rows) {
     if (dateStr.startsWith('2024')) return '#1a4d32';
     if (dateStr.startsWith('2025')) return '#2d7a4f';
     return '#5bb87a';
+  }
+
+  function buildMonthlyLine(canvasId, inst, label, filterFn, color) {
+    const filtered = [...rows].filter(filterFn).sort((a,b) => a.date.localeCompare(b.date));
+    const monthMap = {};
+    filtered.forEach(t => {
+      const m = t.date.slice(0, 7);
+      monthMap[m] = (monthMap[m] || 0) + t.usd;
+    });
+    const months = Object.keys(monthMap).sort();
+    const vals   = months.map(m => +monthMap[m].toFixed(2));
+    const labels = months.map(m => {
+      const [y, mo] = m.split('-');
+      return allYears ? `${MONTH_NAMES[parseInt(mo)-1]} '${y.slice(2)}` : MONTH_NAMES[parseInt(mo)-1];
+    });
+    const colors = months.map(m => pointColor(m + '-01'));
+    const trend  = linearRegression(vals);
+
+    if (inst) inst.destroy();
+    return new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label,
+            data: vals,
+            borderColor: color,
+            borderWidth: 1.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: colors,
+            pointBorderColor: colors,
+            tension: 0,
+            fill: false,
+          },
+          {
+            label: 'Trend',
+            data: trend,
+            borderColor: 'rgba(0,0,0,0.35)',
+            borderWidth: 2,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            filter: item => item.datasetIndex === 0,
+            callbacks: {
+              title: ctx => months[ctx[0].dataIndex],
+              label: ctx => ` $${ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
+          y: { ticks: { callback: v => '$' + v.toLocaleString() } }
+        }
+      }
+    });
   }
 
   function buildDailyLine(canvasId, inst, label, filterFn, color, yearLabelsOnly = false) {
@@ -534,7 +600,7 @@ function renderCharts(rows) {
     }
   });
   medAidInst  = buildDailyLine('medAidChart',    medAidInst,  'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
-  topUpAmtInst = buildDailyLine('topUpAmtChart', topUpAmtInst, 'Top Up Amount',       t => t.usd <= 200, '#2d7a4f', false);
+  topUpAmtInst = buildMonthlyLine('topUpAmtChart', topUpAmtInst, 'Top Up Monthly Total', t => t.usd <= 200, '#2d7a4f');
 
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));

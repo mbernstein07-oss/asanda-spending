@@ -233,7 +233,7 @@
   <!-- Charts -->
   <div class="charts-grid">
     <div class="chart-wrap full">
-      <h3>Top Up</h3>
+      <h3>Days Between Top Ups</h3>
       <canvas id="topUpChart"></canvas>
     </div>
     <div class="chart-wrap full">
@@ -454,7 +454,80 @@ function renderCharts(rows) {
     });
   }
 
-  topUpInst  = buildDailyLine('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f', true);
+  // Days-between-top-ups chart
+  const topUps = [...rows].filter(t => t.usd <= 200).sort((a,b) => a.date.localeCompare(b.date));
+  const gapLabels = [];
+  const gapVals   = [];
+  const gapColors = [];
+  for (let i = 1; i < topUps.length; i++) {
+    const prev = new Date(topUps[i-1].date);
+    const curr = new Date(topUps[i].date);
+    const days = Math.round((curr - prev) / 86400000);
+    gapLabels.push(topUps[i].date);
+    gapVals.push(days);
+    gapColors.push(pointColor(topUps[i].date));
+  }
+  const gapTrend = linearRegression(gapVals);
+  const gapYearFirstIdx = new Set();
+  { let lastY = null; gapLabels.forEach((d,i) => { const y=d.slice(0,4); if(y!==lastY){gapYearFirstIdx.add(i);lastY=y;} }); }
+
+  if (topUpInst) topUpInst.destroy();
+  topUpInst = new Chart(document.getElementById('topUpChart'), {
+    type: 'line',
+    data: {
+      labels: gapLabels,
+      datasets: [
+        {
+          label: 'Days since last top up',
+          data: gapVals,
+          borderColor: '#2d7a4f',
+          backgroundColor: gapColors,
+          borderWidth: 1.5,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: gapColors,
+          pointBorderColor: gapColors,
+          tension: 0,
+          fill: false,
+        },
+        {
+          label: 'Trend',
+          data: gapTrend,
+          borderColor: 'rgba(0,0,0,0.35)',
+          borderWidth: 2,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          tension: 0.3,
+          fill: false,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          filter: item => item.datasetIndex === 0,
+          callbacks: {
+            title: ctx => gapLabels[ctx[0].dataIndex],
+            label: ctx => ` ${ctx.parsed.y} days since prev top up`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 0,
+            callback: (val, i) => gapYearFirstIdx.has(i) ? gapLabels[i].slice(0,4) : null,
+          }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v + 'd' }
+        }
+      }
+    }
+  });
   medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
 
   // Cumulative chart

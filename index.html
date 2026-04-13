@@ -56,6 +56,8 @@
       font-size: 0.85rem;
     }
     .year-nav button:hover { background: #eef3f0; }
+    .year-nav button.all-btn { font-weight: 600; }
+    .year-nav button.all-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
     .year-label { font-size: 1rem; font-weight: 600; min-width: 44px; text-align: center; }
 
     .main { max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
@@ -193,6 +195,7 @@
     <button id="prevYear">&#8592;</button>
     <div class="year-label" id="yearLabel">2026</div>
     <button id="nextYear">&#8594;</button>
+    <button class="all-btn" id="allYearsBtn">All</button>
   </div>
 </header>
 
@@ -272,6 +275,7 @@
 <script>
 let transfers = [];
 let currentYear = 2026;
+let allYears = false;
 let sortCol = 'date';
 let sortDir = -1;
 let barInst, rateInst, cumulativeInst;
@@ -282,13 +286,27 @@ async function init() {
   renderAll();
 }
 
-function yearTransfers() {
+function activeTransfers() {
+  if (allYears) return transfers.filter(t => t.status === 'Delivered');
   return transfers.filter(t => t.date.startsWith(String(currentYear)) && t.status === 'Delivered');
 }
 
 function renderAll() {
-  document.getElementById('yearLabel').textContent = currentYear;
-  const rows = yearTransfers();
+  const allBtn = document.getElementById('allYearsBtn');
+  const prevBtn = document.getElementById('prevYear');
+  const nextBtn = document.getElementById('nextYear');
+  if (allYears) {
+    document.getElementById('yearLabel').textContent = 'All';
+    allBtn.classList.add('active');
+    prevBtn.disabled = true; prevBtn.style.opacity = '0.35';
+    nextBtn.disabled = true; nextBtn.style.opacity = '0.35';
+  } else {
+    document.getElementById('yearLabel').textContent = currentYear;
+    allBtn.classList.remove('active');
+    prevBtn.disabled = false; prevBtn.style.opacity = '';
+    nextBtn.disabled = false; nextBtn.style.opacity = '';
+  }
+  const rows = activeTransfers();
   renderStats(rows);
   renderCharts(rows);
   renderTable(rows);
@@ -326,10 +344,12 @@ function renderCharts(rows) {
   });
   const months = Object.keys(monthMap).sort();
   const monthVals = months.map(m => monthMap[m]);
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthLabels = months.map(m => {
     const [y, mo] = m.split('-');
-    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo)-1];
+    return allYears ? `${MONTH_NAMES[parseInt(mo)-1]} '${y.slice(2)}` : MONTH_NAMES[parseInt(mo)-1];
   });
+  const barColors = months.map(m => m.startsWith('2025') ? '#2d7a4f' : '#5bb87a');
 
   // Bar chart — USD per month
   if (barInst) barInst.destroy();
@@ -340,13 +360,16 @@ function renderCharts(rows) {
       datasets: [{
         label: 'USD Sent',
         data: monthVals,
-        backgroundColor: '#2d7a4f',
+        backgroundColor: barColors,
         borderRadius: 5,
       }]
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) } }
+      },
       scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
     }
   });
@@ -453,8 +476,9 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 });
 
 // ── Year nav ──────────────────────────────────────────────────────────────────
-document.getElementById('prevYear').addEventListener('click', () => { currentYear--; renderAll(); });
-document.getElementById('nextYear').addEventListener('click', () => { currentYear++; renderAll(); });
+document.getElementById('prevYear').addEventListener('click', () => { allYears = false; currentYear--; renderAll(); });
+document.getElementById('nextYear').addEventListener('click', () => { allYears = false; currentYear++; renderAll(); });
+document.getElementById('allYearsBtn').addEventListener('click', () => { allYears = !allYears; renderAll(); });
 
 // ── Export ────────────────────────────────────────────────────────────────────
 document.getElementById('exportBtn').addEventListener('click', () => {

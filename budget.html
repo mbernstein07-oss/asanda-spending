@@ -162,6 +162,84 @@
       font-style: italic;
       margin-bottom: 16px;
     }
+
+    /* Transcription */
+    .transcription {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .transcription h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .budget-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .budget-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .budget-item:last-child { border-bottom: none; }
+    .budget-item:nth-child(even) { background: #fafcfb; }
+
+    .budget-item-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .budget-item-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+
+    .budget-item-amount {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .budget-item-freq {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 400;
+      text-align: right;
+      margin-top: 2px;
+    }
+
+    .budget-savings {
+      margin-top: 16px;
+      padding: 13px 16px;
+      background: #eef7f2;
+      border: 1px solid #c4dfd0;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -178,6 +256,72 @@
 
   <div class="photo-card">
     <img src="./budget-photo.jpg" alt="Asanda's handwritten monthly budget breakdown" />
+  </div>
+
+  <!-- Transcription -->
+  <div class="transcription">
+    <h2>Transcription</h2>
+    <div class="budget-items">
+
+      <div class="budget-item">
+        <div>
+          <div class="budget-item-label">Medication</div>
+        </div>
+        <div>
+          <div class="budget-item-amount">R980,00</div>
+          <div class="budget-item-freq">monthly</div>
+        </div>
+      </div>
+
+      <div class="budget-item">
+        <div>
+          <div class="budget-item-label">Electricity</div>
+          <div class="budget-item-note">R200/week × ~5 weeks</div>
+        </div>
+        <div>
+          <div class="budget-item-amount">R1,000</div>
+          <div class="budget-item-freq">monthly total</div>
+        </div>
+      </div>
+
+      <div class="budget-item">
+        <div>
+          <div class="budget-item-label">Food</div>
+          <div class="budget-item-note">groceries</div>
+        </div>
+        <div>
+          <div class="budget-item-amount">≈ R1,000</div>
+          <div class="budget-item-freq">monthly</div>
+        </div>
+      </div>
+
+      <div class="budget-item">
+        <div>
+          <div class="budget-item-label">Toiletries</div>
+          <div class="budget-item-note">together</div>
+        </div>
+        <div>
+          <div class="budget-item-amount">R500</div>
+          <div class="budget-item-freq">monthly</div>
+        </div>
+      </div>
+
+      <div class="budget-item">
+        <div>
+          <div class="budget-item-label">Transport</div>
+          <div class="budget-item-note">R200 return/day · Uber · peak hours · ×3 days a week</div>
+        </div>
+        <div>
+          <div class="budget-item-amount">R200/day</div>
+          <div class="budget-item-freq">3× per week</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="budget-savings">
+      💰 Rest of the money saved for emergency
+    </div>
   </div>
 
   <div class="comments-section">

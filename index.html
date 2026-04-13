@@ -232,12 +232,12 @@
 
   <!-- Charts -->
   <div class="charts-grid">
-    <div class="chart-wrap">
-      <h3>Top Up — USD per Month</h3>
+    <div class="chart-wrap full">
+      <h3>Top Up</h3>
       <canvas id="topUpChart"></canvas>
     </div>
-    <div class="chart-wrap">
-      <h3>Monthly Medical Aid — USD per Month</h3>
+    <div class="chart-wrap full">
+      <h3>Monthly Medical Aid</h3>
       <canvas id="medAidChart"></canvas>
     </div>
   </div>
@@ -379,12 +379,22 @@ function renderCharts(rows) {
     return '#5bb87a';
   }
 
-  function buildDailyLine(canvasId, inst, label, filterFn, color) {
+  function buildDailyLine(canvasId, inst, label, filterFn, color, yearLabelsOnly = false) {
     const filtered = [...rows].filter(filterFn).sort((a,b) => a.date.localeCompare(b.date));
     const labels = filtered.map(t => dateLabel(t.date));
     const vals   = filtered.map(t => t.usd);
     const colors = filtered.map(t => pointColor(t.date));
     const trend  = linearRegression(vals);
+
+    // For year-only labels: track which index is the first of each year
+    const yearFirstIdx = new Set();
+    if (yearLabelsOnly) {
+      let lastYear = null;
+      filtered.forEach((t, i) => {
+        const y = t.date.slice(0, 4);
+        if (y !== lastYear) { yearFirstIdx.add(i); lastYear = y; }
+      });
+    }
 
     if (inst) inst.destroy();
     return new Chart(document.getElementById(canvasId), {
@@ -430,15 +440,22 @@ function renderCharts(rows) {
           }
         },
         scales: {
-          x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
+          x: yearLabelsOnly
+            ? {
+                ticks: {
+                  maxRotation: 0,
+                  callback: (val, i) => yearFirstIdx.has(i) ? filtered[i].date.slice(0, 4) : null,
+                }
+              }
+            : { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
           y: { ticks: { callback: v => '$' + v.toLocaleString() } }
         }
       }
     });
   }
 
-  topUpInst  = buildDailyLine('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f');
-  medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a');
+  topUpInst  = buildDailyLine('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f', true);
+  medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
 
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));

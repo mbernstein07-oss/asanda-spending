@@ -332,7 +332,7 @@ function renderStats(rows) {
   document.getElementById('statZARsub').textContent = `at avg R${avgRate.toFixed(2)}/USD`;
   document.getElementById('statRate').textContent   = avgRate.toFixed(2);
   document.getElementById('statCount').textContent  = rows.length;
-  document.getElementById('statCountSub').textContent = `${rows.filter(t=>t.usd > 200).length} monthly + ${rows.filter(t=>t.usd <= 200).length} weekly`;
+  document.getElementById('statCountSub').textContent = `${rows.filter(t=>t.usd > 200).length} medical aid + ${rows.filter(t=>t.usd <= 200).length} top ups`;
   document.getElementById('statFees').textContent   = fmtUSD(totalFees);
 }
 
@@ -451,7 +451,7 @@ function renderTable(rows) {
 
   tbody.innerHTML = sorted.map(t => {
     const rate  = (t.zar / t.usd).toFixed(2);
-    const type  = t.usd > 200 ? 'Monthly' : 'Weekly';
+    const type  = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
     const badge = t.usd > 200 ? 'badge-monthly' : 'badge-weekly';
     return `<tr>
       <td>${formatDate(t.date)}</td>
@@ -488,7 +488,7 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   const lines = [
     'Date,Type,USD Sent,ZAR Received,Rate (ZAR/USD),Fee,Reference',
     ...rows.map(t => {
-      const type = t.usd > 200 ? 'Monthly' : 'Weekly';
+      const type = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
       const rate = (t.zar / t.usd).toFixed(2);
       return `${t.date},${type},${t.usd},${t.zar},${rate},${t.fee},${t.ref}`;
     })

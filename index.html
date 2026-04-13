@@ -233,16 +233,20 @@
   <!-- Charts -->
   <div class="charts-grid">
     <div class="chart-wrap">
-      <h3>USD Sent per Month</h3>
-      <canvas id="barChart"></canvas>
+      <h3>Top Up — USD per Month</h3>
+      <canvas id="topUpChart"></canvas>
     </div>
     <div class="chart-wrap">
-      <h3>Exchange Rate Trend (ZAR/USD)</h3>
-      <canvas id="rateChart"></canvas>
+      <h3>Monthly Medical Aid — USD per Month</h3>
+      <canvas id="medAidChart"></canvas>
     </div>
     <div class="chart-wrap full">
       <h3>Cumulative USD Sent</h3>
       <canvas id="cumulativeChart"></canvas>
+    </div>
+    <div class="chart-wrap full">
+      <h3>Exchange Rate Trend (ZAR/USD)</h3>
+      <canvas id="rateChart"></canvas>
     </div>
   </div>
 
@@ -278,7 +282,7 @@ let currentYear = 2026;
 let allYears = false;
 let sortCol = 'date';
 let sortDir = -1;
-let barInst, rateInst, cumulativeInst;
+let topUpInst, medAidInst, rateInst, cumulativeInst;
 
 async function init() {
   const res = await fetch('./data.json?_=' + Date.now());
@@ -353,84 +357,73 @@ function renderCharts(rows) {
     m.startsWith('2023') ? '#0d2b1a' : m.startsWith('2024') ? '#1a4d32' : m.startsWith('2025') ? '#2d7a4f' : '#5bb87a'
   );
 
-  // Bar chart — USD per month
-  if (barInst) barInst.destroy();
-  barInst = new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-      labels: monthLabels,
-      datasets: [{
-        label: 'USD Sent',
-        data: monthVals,
-        backgroundColor: barColors,
-        borderRadius: 5,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) } }
-      },
-      scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
-    }
+  const tooltipUSD = { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) } };
+  const yUSD = { ticks: { callback: v => '$' + v.toLocaleString() } };
+
+  function buildMonthlyBar(canvasId, inst, label, filterFn, color) {
+    const map = {};
+    rows.filter(filterFn).forEach(t => {
+      const m = t.date.slice(0,7);
+      map[m] = (map[m] || 0) + t.usd;
+    });
+    // use same month axis so both charts align
+    const vals   = months.map(m => map[m] || 0);
+    const colors = months.map(m =>
+      m.startsWith('2023') ? shadeColor(color, -50) :
+      m.startsWith('2024') ? shadeColor(color, -25) :
+      m.startsWith('2025') ? color :
+      shadeColor(color, 25)
+    );
+    if (inst) inst.destroy();
+    return new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: { labels: monthLabels, datasets: [{ label, data: vals, backgroundColor: colors, borderRadius: 5 }] },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, tooltip: tooltipUSD },
+        scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
+      }
+    });
+  }
+
+  topUpInst  = buildMonthlyBar('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f');
+  medAidInst = buildMonthlyBar('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a');
+
+  // Cumulative chart
+  const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
+  let cum = 0;
+  const cumLabels = sorted.map(t => allYears ? t.date.slice(2,7) : t.date.slice(5));
+  const cumVals   = sorted.map(t => { cum += t.usd; return +cum.toFixed(2); });
+
+  if (cumulativeInst) cumulativeInst.destroy();
+  cumulativeInst = new Chart(document.getElementById('cumulativeChart'), {
+    type: 'line',
+    data: { labels: cumLabels, datasets: [{ label: 'Cumulative USD', data: cumVals,
+      borderColor: '#2d7a4f', backgroundColor: 'rgba(45,122,79,0.08)',
+      fill: true, tension: 0.2, pointRadius: 2, pointBackgroundColor: '#2d7a4f' }] },
+    options: { responsive: true, plugins: { legend: { display: false }, tooltip: tooltipUSD }, scales: { y: yUSD } }
   });
 
-  // Rate chart — per transfer over time
-  const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
-  const rateDates = sorted.map(t => t.date.slice(5)); // MM-DD
+  // Rate chart
+  const rateDates = sorted.map(t => allYears ? t.date.slice(2,7) : t.date.slice(5));
   const rates     = sorted.map(t => +(t.zar / t.usd).toFixed(2));
 
   if (rateInst) rateInst.destroy();
   rateInst = new Chart(document.getElementById('rateChart'), {
     type: 'line',
-    data: {
-      labels: rateDates,
-      datasets: [{
-        label: 'ZAR/USD',
-        data: rates,
-        borderColor: '#5bb87a',
-        backgroundColor: 'rgba(91,184,122,0.1)',
-        fill: true,
-        tension: 0.3,
-        pointRadius: 3,
-        pointBackgroundColor: '#5bb87a',
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { ticks: { callback: v => 'R' + v } } }
-    }
+    data: { labels: rateDates, datasets: [{ label: 'ZAR/USD', data: rates,
+      borderColor: '#5bb87a', backgroundColor: 'rgba(91,184,122,0.1)',
+      fill: true, tension: 0.3, pointRadius: 2, pointBackgroundColor: '#5bb87a' }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => 'R' + v } } } }
   });
+}
 
-  // Cumulative chart
-  let cum = 0;
-  const cumDates = sorted.map(t => t.date.slice(5));
-  const cumVals  = sorted.map(t => { cum += t.usd; return +cum.toFixed(2); });
-
-  if (cumulativeInst) cumulativeInst.destroy();
-  cumulativeInst = new Chart(document.getElementById('cumulativeChart'), {
-    type: 'line',
-    data: {
-      labels: cumDates,
-      datasets: [{
-        label: 'Cumulative USD',
-        data: cumVals,
-        borderColor: '#2d7a4f',
-        backgroundColor: 'rgba(45,122,79,0.08)',
-        fill: true,
-        tension: 0.2,
-        pointRadius: 3,
-        pointBackgroundColor: '#2d7a4f',
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
-    }
-  });
+function shadeColor(hex, pct) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, Math.max(0, (n >> 16) + pct));
+  const g = Math.min(255, Math.max(0, ((n >> 8) & 0xff) + pct));
+  const b = Math.min(255, Math.max(0, (n & 0xff) + pct));
+  return '#' + [r,g,b].map(x => x.toString(16).padStart(2,'0')).join('');
 }
 
 function renderTable(rows) {

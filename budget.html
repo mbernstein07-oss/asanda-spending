@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly Budget — Asanda Mkiva</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f9f8;
+      --surface: #ffffff;
+      --border: #e2e8e4;
+      --text: #1a2e22;
+      --muted: #6b8070;
+      --accent: #2d7a4f;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    header {
+      max-width: 720px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+    header p  { font-size: 0.83rem; color: var(--muted); margin-top: 3px; }
+
+    .back-link {
+      font-size: 0.83rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .main {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .photo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .photo-card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Comments */
+    .comments-section h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .comment {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .comment-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .comment-body {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .comment-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .comment-form label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.87rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      margin-bottom: 14px;
+      resize: vertical;
+    }
+    .comment-form input:focus,
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .comment-form textarea { min-height: 90px; }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.88; }
+
+    .empty-state {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Monthly Budget</h1>
+    <p>Asanda Mkiva — handwritten breakdown</p>
+  </div>
+  <a class="back-link" href="./index.html">&#8592; Back to transfers</a>
+</header>
+
+<div class="main">
+
+  <div class="photo-card">
+    <img src="./budget-photo.jpg" alt="Asanda's handwritten monthly budget breakdown" />
+  </div>
+
+  <div class="comments-section">
+    <h2>Comments</h2>
+    <div id="commentsList"></div>
+
+    <div class="comment-form">
+      <label for="authorInput">Your name</label>
+      <input type="text" id="authorInput" placeholder="e.g. Matt" maxlength="60" />
+      <label for="commentInput">Comment</label>
+      <textarea id="commentInput" placeholder="Add a note about the budget..."></textarea>
+      <button class="btn" id="submitBtn">Add comment</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'asanda_budget_comments';
+
+function loadComments() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveComments(comments) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+}
+
+function renderComments() {
+  const comments = loadComments();
+  const list = document.getElementById('commentsList');
+  if (comments.length === 0) {
+    list.innerHTML = '<p class="empty-state">No comments yet.</p>';
+    return;
+  }
+  list.innerHTML = comments.map((c, i) => `
+    <div class="comment">
+      <div class="comment-meta">${escHtml(c.author)} &middot; ${c.date}</div>
+      <div class="comment-body">${escHtml(c.text)}</div>
+    </div>
+  `).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const author = document.getElementById('authorInput').value.trim() || 'Anonymous';
+  const text   = document.getElementById('commentInput').value.trim();
+  if (!text) return;
+  const comments = loadComments();
+  comments.push({
+    author,
+    text,
+    date: new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' })
+  });
+  saveComments(comments);
+  document.getElementById('commentInput').value = '';
+  renderComments();
+});
+
+renderComments();
+</script>
+</body>
+</html>

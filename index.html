@@ -362,62 +362,83 @@ function renderStats(rows) {
 }
 
 function renderCharts(rows) {
-  const monthMap = {};
-  rows.forEach(t => {
-    const m = t.date.slice(0,7);
-    monthMap[m] = (monthMap[m] || 0) + t.usd;
-  });
-  const months = Object.keys(monthMap).sort();
-  const monthVals = months.map(m => monthMap[m]);
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const monthLabels = months.map(m => {
-    const [y, mo] = m.split('-');
-    return allYears ? `${MONTH_NAMES[parseInt(mo)-1]} '${y.slice(2)}` : MONTH_NAMES[parseInt(mo)-1];
-  });
-  const barColors = months.map(m =>
-    m.startsWith('2023') ? '#0d2b1a' : m.startsWith('2024') ? '#1a4d32' : m.startsWith('2025') ? '#2d7a4f' : '#5bb87a'
-  );
+  const tooltipUSD = { callbacks: { label: ctx => ` $${parseFloat(ctx.parsed.y).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}` } };
 
-  const tooltipUSD = { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) } };
-  const yUSD = { ticks: { callback: v => '$' + v.toLocaleString() } };
+  function dateLabel(dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    return allYears
+      ? `${MONTH_NAMES[parseInt(m)-1]} ${parseInt(d)} '${y.slice(2)}`
+      : `${MONTH_NAMES[parseInt(m)-1]} ${parseInt(d)}`;
+  }
 
-  function buildMonthlyBar(canvasId, inst, label, filterFn, color) {
-    const map = {};
-    rows.filter(filterFn).forEach(t => {
-      const m = t.date.slice(0,7);
-      map[m] = (map[m] || 0) + t.usd;
-    });
-    // use same month axis so both charts align
-    const vals   = months.map(m => map[m] || 0);
-    const colors = months.map(m =>
-      m.startsWith('2023') ? shadeColor(color, -50) :
-      m.startsWith('2024') ? shadeColor(color, -25) :
-      m.startsWith('2025') ? color :
-      shadeColor(color, 25)
-    );
-    const trend = linearRegression(vals);
+  function pointColor(dateStr) {
+    if (dateStr.startsWith('2023')) return '#0d2b1a';
+    if (dateStr.startsWith('2024')) return '#1a4d32';
+    if (dateStr.startsWith('2025')) return '#2d7a4f';
+    return '#5bb87a';
+  }
+
+  function buildDailyLine(canvasId, inst, label, filterFn, color) {
+    const filtered = [...rows].filter(filterFn).sort((a,b) => a.date.localeCompare(b.date));
+    const labels = filtered.map(t => dateLabel(t.date));
+    const vals   = filtered.map(t => t.usd);
+    const colors = filtered.map(t => pointColor(t.date));
+    const trend  = linearRegression(vals);
+
     if (inst) inst.destroy();
     return new Chart(document.getElementById(canvasId), {
-      type: 'bar',
+      type: 'line',
       data: {
-        labels: monthLabels,
+        labels,
         datasets: [
-          { type: 'bar',  label, data: vals, backgroundColor: colors, borderRadius: 5 },
-          { type: 'line', label: 'Trend', data: trend,
-            borderColor: 'rgba(0,0,0,0.45)', borderWidth: 2, borderDash: [5, 4],
-            pointRadius: 0, tension: 0.3, fill: false }
+          {
+            label,
+            data: vals,
+            borderColor: color,
+            backgroundColor: colors,
+            borderWidth: 1.5,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: colors,
+            pointBorderColor: colors,
+            tension: 0,
+            fill: false,
+          },
+          {
+            label: 'Trend',
+            data: trend,
+            borderColor: 'rgba(0,0,0,0.35)',
+            borderWidth: 2,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          }
         ]
       },
       options: {
         responsive: true,
-        plugins: { legend: { display: false }, tooltip: { filter: item => item.datasetIndex === 0, callbacks: tooltipUSD.callbacks } },
-        scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            filter: item => item.datasetIndex === 0,
+            callbacks: {
+              title: ctx => filtered[ctx[0].dataIndex].date,
+              label: ctx => ` $${ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
+          y: { ticks: { callback: v => '$' + v.toLocaleString() } }
+        }
       }
     });
   }
 
-  topUpInst  = buildMonthlyBar('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f');
-  medAidInst = buildMonthlyBar('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a');
+  topUpInst  = buildDailyLine('topUpChart',  topUpInst,  'Top Up',             t => t.usd <= 200, '#2d7a4f');
+  medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a');
 
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));

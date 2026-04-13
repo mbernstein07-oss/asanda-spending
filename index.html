@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asanda Mkiva — Remitly Transfers</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f9f8;
+      --surface: #ffffff;
+      --border: #e2e8e4;
+      --text: #1a2e22;
+      --muted: #6b8070;
+      --accent: #2d7a4f;
+      --accent2: #5bb87a;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    header {
+      max-width: 1060px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+    header p  { font-size: 0.83rem; color: var(--muted); margin-top: 3px; }
+
+    .year-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .year-nav button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .year-nav button:hover { background: #eef3f0; }
+    .year-label { font-size: 1rem; font-weight: 600; min-width: 44px; text-align: center; }
+
+    .main { max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+
+    /* ── Stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-size: 1.65rem; font-weight: 700; color: var(--accent); margin-top: 5px; line-height: 1.15; }
+    .stat-sub   { font-size: 0.75rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── Charts ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 680px) { .charts-grid { grid-template-columns: 1fr; } }
+
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .chart-wrap.full { grid-column: 1 / -1; }
+
+    .chart-wrap h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+    .chart-wrap canvas { max-height: 260px; }
+
+    /* ── Table card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+
+    thead th {
+      text-align: left;
+      padding: 9px 12px;
+      border-bottom: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { color: var(--accent); }
+    thead th.sorted { color: var(--accent); }
+
+    tbody tr:hover { background: #f4f8f5; }
+    tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 0.73rem;
+      font-weight: 500;
+    }
+    .badge-weekly   { background: #e8f0eb; color: var(--accent); }
+    .badge-monthly  { background: #fff3e0; color: #b45309; }
+
+    .rate-cell { font-size: 0.78rem; color: var(--muted); }
+    .usd-cell  { font-weight: 600; }
+    .zar-cell  { color: var(--muted); }
+
+    .btn {
+      padding: 7px 16px;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--accent);
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #eef3f0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Asanda Mkiva</h1>
+    <p>Remitly transfer history · USD → ZAR</p>
+  </div>
+  <div class="year-nav">
+    <button id="prevYear">&#8592;</button>
+    <div class="year-label" id="yearLabel">2026</div>
+    <button id="nextYear">&#8594;</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <div class="stat-label">Total Sent (USD)</div>
+      <div class="stat-value" id="statUSD">—</div>
+      <div class="stat-sub" id="statUSDsub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Received (ZAR)</div>
+      <div class="stat-value" id="statZAR">—</div>
+      <div class="stat-sub" id="statZARsub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Exchange Rate</div>
+      <div class="stat-value" id="statRate">—</div>
+      <div class="stat-sub">ZAR per USD</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Transfers</div>
+      <div class="stat-value" id="statCount">—</div>
+      <div class="stat-sub" id="statCountSub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Fees</div>
+      <div class="stat-value" id="statFees">—</div>
+      <div class="stat-sub">Remitly fees paid</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <h3>USD Sent per Month</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <h3>Exchange Rate Trend (ZAR/USD)</h3>
+      <canvas id="rateChart"></canvas>
+    </div>
+    <div class="chart-wrap full">
+      <h3>Cumulative USD Sent</h3>
+      <canvas id="cumulativeChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    <div class="card-header">
+      <h2>All Transfers <span id="tableCount" style="font-weight:400;text-transform:none;font-size:0.85rem;color:var(--muted);"></span></h2>
+      <button class="btn" id="exportBtn">⬇ Export CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="date" class="sorted">Date ↓</th>
+            <th data-col="type">Type</th>
+            <th data-col="usd">USD Sent ↕</th>
+            <th data-col="zar">ZAR Received ↕</th>
+            <th data-col="rate">Rate (ZAR/USD) ↕</th>
+            <th data-col="fee">Fee</th>
+            <th>Reference</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let transfers = [];
+let currentYear = 2026;
+let sortCol = 'date';
+let sortDir = -1;
+let barInst, rateInst, cumulativeInst;
+
+async function init() {
+  const res = await fetch('./data.json?_=' + Date.now());
+  transfers = await res.json();
+  renderAll();
+}
+
+function yearTransfers() {
+  return transfers.filter(t => t.date.startsWith(String(currentYear)) && t.status === 'Delivered');
+}
+
+function renderAll() {
+  document.getElementById('yearLabel').textContent = currentYear;
+  const rows = yearTransfers();
+  renderStats(rows);
+  renderCharts(rows);
+  renderTable(rows);
+}
+
+function renderStats(rows) {
+  if (rows.length === 0) {
+    ['statUSD','statZAR','statRate','statCount','statFees'].forEach(id => {
+      document.getElementById(id).textContent = '—';
+    });
+    return;
+  }
+
+  const totalUSD  = rows.reduce((s, t) => s + t.usd, 0);
+  const totalZAR  = rows.reduce((s, t) => s + t.zar, 0);
+  const totalFees = rows.reduce((s, t) => s + t.fee, 0);
+  const avgRate   = totalZAR / totalUSD;
+  const months    = new Set(rows.map(t => t.date.slice(0,7))).size;
+
+  document.getElementById('statUSD').textContent    = fmtUSD(totalUSD);
+  document.getElementById('statUSDsub').textContent = `across ${months} month${months !== 1 ? 's' : ''}`;
+  document.getElementById('statZAR').textContent    = 'R' + fmtNum(totalZAR);
+  document.getElementById('statZARsub').textContent = `at avg R${avgRate.toFixed(2)}/USD`;
+  document.getElementById('statRate').textContent   = avgRate.toFixed(2);
+  document.getElementById('statCount').textContent  = rows.length;
+  document.getElementById('statCountSub').textContent = `${rows.filter(t=>t.usd > 200).length} monthly + ${rows.filter(t=>t.usd <= 200).length} weekly`;
+  document.getElementById('statFees').textContent   = fmtUSD(totalFees);
+}
+
+function renderCharts(rows) {
+  const monthMap = {};
+  rows.forEach(t => {
+    const m = t.date.slice(0,7);
+    monthMap[m] = (monthMap[m] || 0) + t.usd;
+  });
+  const months = Object.keys(monthMap).sort();
+  const monthVals = months.map(m => monthMap[m]);
+  const monthLabels = months.map(m => {
+    const [y, mo] = m.split('-');
+    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo)-1];
+  });
+
+  // Bar chart — USD per month
+  if (barInst) barInst.destroy();
+  barInst = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'USD Sent',
+        data: monthVals,
+        backgroundColor: '#2d7a4f',
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
+    }
+  });
+
+  // Rate chart — per transfer over time
+  const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
+  const rateDates = sorted.map(t => t.date.slice(5)); // MM-DD
+  const rates     = sorted.map(t => +(t.zar / t.usd).toFixed(2));
+
+  if (rateInst) rateInst.destroy();
+  rateInst = new Chart(document.getElementById('rateChart'), {
+    type: 'line',
+    data: {
+      labels: rateDates,
+      datasets: [{
+        label: 'ZAR/USD',
+        data: rates,
+        borderColor: '#5bb87a',
+        backgroundColor: 'rgba(91,184,122,0.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+        pointBackgroundColor: '#5bb87a',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => 'R' + v } } }
+    }
+  });
+
+  // Cumulative chart
+  let cum = 0;
+  const cumDates = sorted.map(t => t.date.slice(5));
+  const cumVals  = sorted.map(t => { cum += t.usd; return +cum.toFixed(2); });
+
+  if (cumulativeInst) cumulativeInst.destroy();
+  cumulativeInst = new Chart(document.getElementById('cumulativeChart'), {
+    type: 'line',
+    data: {
+      labels: cumDates,
+      datasets: [{
+        label: 'Cumulative USD',
+        data: cumVals,
+        borderColor: '#2d7a4f',
+        backgroundColor: 'rgba(45,122,79,0.08)',
+        fill: true,
+        tension: 0.2,
+        pointRadius: 3,
+        pointBackgroundColor: '#2d7a4f',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => '$' + v.toLocaleString() } } }
+    }
+  });
+}
+
+function renderTable(rows) {
+  const sorted = [...rows].sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (sortCol === 'rate') { av = a.zar / a.usd; bv = b.zar / b.usd; }
+    if (typeof av === 'number') return (av - bv) * sortDir;
+    return String(av).localeCompare(String(bv)) * sortDir;
+  });
+
+  document.getElementById('tableCount').textContent = `(${sorted.length})`;
+
+  const tbody = document.getElementById('tableBody');
+  if (sorted.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:30px">No transfers for ${currentYear}.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = sorted.map(t => {
+    const rate  = (t.zar / t.usd).toFixed(2);
+    const type  = t.usd > 200 ? 'Monthly' : 'Weekly';
+    const badge = t.usd > 200 ? 'badge-monthly' : 'badge-weekly';
+    return `<tr>
+      <td>${formatDate(t.date)}</td>
+      <td><span class="badge ${badge}">${type}</span></td>
+      <td class="usd-cell">${fmtUSD(t.usd)}</td>
+      <td class="zar-cell">R${fmtNum(t.zar)}</td>
+      <td class="rate-cell">R${rate}</td>
+      <td class="rate-cell">${fmtUSD(t.fee)}</td>
+      <td class="rate-cell" style="font-family:monospace;font-size:0.74rem">${t.ref}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Sort ──────────────────────────────────────────────────────────────────────
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1;
+    else { sortCol = col; sortDir = col === 'date' ? -1 : -1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    renderTable(yearTransfers());
+  });
+});
+
+// ── Year nav ──────────────────────────────────────────────────────────────────
+document.getElementById('prevYear').addEventListener('click', () => { currentYear--; renderAll(); });
+document.getElementById('nextYear').addEventListener('click', () => { currentYear++; renderAll(); });
+
+// ── Export ────────────────────────────────────────────────────────────────────
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = yearTransfers().sort((a,b) => a.date.localeCompare(b.date));
+  const lines = [
+    'Date,Type,USD Sent,ZAR Received,Rate (ZAR/USD),Fee,Reference',
+    ...rows.map(t => {
+      const type = t.usd > 200 ? 'Monthly' : 'Weekly';
+      const rate = (t.zar / t.usd).toFixed(2);
+      return `${t.date},${type},${t.usd},${t.zar},${rate},${t.fee},${t.ref}`;
+    })
+  ];
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
+  a.download = `asanda-transfers-${currentYear}.csv`;
+  a.click();
+});
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function fmtUSD(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtNum(n) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatDate(str) {
+  const [y, m, d] = str.split('-');
+  const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m)-1];
+  return `${mo} ${parseInt(d)}, ${y}`;
+}
+
+init();
+</script>
+</body>
+</html>

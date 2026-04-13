@@ -84,6 +84,28 @@
     }
     .yr-btn:hover:not(.active) { background: #eef3f0; color: var(--text); }
 
+    .currency-toggle {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .cur-btn {
+      background: var(--surface);
+      border: none;
+      color: var(--muted);
+      padding: 5px 14px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cur-btn:first-child { border-right: 1px solid var(--border); }
+    .cur-btn.active { background: var(--accent); color: #fff; }
+    .cur-btn:hover:not(.active) { background: #eef3f0; color: var(--text); }
+
     .main { max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
 
     /* ── Stats ── */
@@ -213,15 +235,21 @@
 <header>
   <div>
     <h1>Asanda Mkiva</h1>
-    <p>Remitly transfer history · USD → ZAR</p>
+    <p id="headerSub">Remitly transfer history · USD → ZAR</p>
     <a href="./budget.html" style="display:inline-block;margin-top:8px;font-size:0.8rem;font-weight:600;color:var(--accent);text-decoration:none;">📋 Monthly budget breakdown →</a>
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
-    <div class="year-nav">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="currency-toggle">
+        <button class="cur-btn active" id="btnUSD">USD</button>
+        <button class="cur-btn" id="btnZAR">ZAR</button>
+      </div>
+      <div class="year-nav">
       <button id="prevYear">&#8592;</button>
       <div class="year-label" id="yearLabel">2026</div>
       <button id="nextYear">&#8594;</button>
       <button class="all-btn" id="allYearsBtn">All</button>
+    </div>
     </div>
     <div class="year-toggles" id="yearToggles"></div>
   </div>
@@ -232,14 +260,14 @@
   <!-- Stats -->
   <div class="stats-row" id="statsRow">
     <div class="stat-card">
-      <div class="stat-label">Total Sent (USD)</div>
-      <div class="stat-value" id="statUSD">—</div>
-      <div class="stat-sub" id="statUSDsub"></div>
+      <div class="stat-label" id="labelPrimary">Total Sent (USD)</div>
+      <div class="stat-value" id="statPrimary">—</div>
+      <div class="stat-sub" id="statPrimarySub"></div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Total Received (ZAR)</div>
-      <div class="stat-value" id="statZAR">—</div>
-      <div class="stat-sub" id="statZARsub"></div>
+      <div class="stat-label" id="labelSecondary">Total Received (ZAR)</div>
+      <div class="stat-value" id="statSecondary">—</div>
+      <div class="stat-sub" id="statSecondarySub"></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Avg Exchange Rate</div>
@@ -286,8 +314,8 @@
           <tr>
             <th data-col="date" class="sorted">Date ↓</th>
             <th data-col="type">Type</th>
-            <th data-col="usd">USD Sent ↕</th>
-            <th data-col="zar">ZAR Received ↕</th>
+            <th data-col="usd" id="thUSD">USD Sent ↕</th>
+            <th data-col="zar" id="thZAR">ZAR Received ↕</th>
             <th data-col="rate">Rate (ZAR/USD) ↕</th>
             <th data-col="fee">Fee</th>
             <th>Reference</th>
@@ -300,7 +328,7 @@
 
   <!-- Cumulative + Exchange Rate — bottom -->
   <div class="chart-wrap">
-    <h3>Cumulative USD Sent</h3>
+    <h3 id="cumulativeTitle">Cumulative USD Sent</h3>
     <canvas id="cumulativeChart"></canvas>
   </div>
 
@@ -316,6 +344,7 @@ let transfers = [];
 let currentYear = 2026;
 let allYears = true;  // default
 let selectedYears = new Set();
+let showZAR = false;
 let sortCol = 'date';
 let sortDir = -1;
 let topUpInst, topUpAmtInst, medAidInst, rateInst, cumulativeInst;
@@ -324,7 +353,7 @@ const NAV_KEY = 'asanda_nav';
 
 function saveNavState() {
   localStorage.setItem(NAV_KEY, JSON.stringify({
-    allYears, currentYear, selectedYears: [...selectedYears]
+    allYears, currentYear, selectedYears: [...selectedYears], showZAR
   }));
 }
 
@@ -334,6 +363,7 @@ function loadNavState(availableYears) {
     if (saved) {
       allYears = saved.allYears;
       currentYear = saved.currentYear || 2026;
+      showZAR = saved.showZAR || false;
       selectedYears = new Set(
         saved.selectedYears?.filter(y => availableYears.includes(y)) || availableYears
       );
@@ -387,6 +417,13 @@ function activeTransfers() {
 }
 
 function renderAll() {
+  // Currency toggle state
+  document.getElementById('btnUSD').classList.toggle('active', !showZAR);
+  document.getElementById('btnZAR').classList.toggle('active', showZAR);
+  document.getElementById('headerSub').textContent = showZAR
+    ? 'Remitly transfer history · ZAR view'
+    : 'Remitly transfer history · USD → ZAR';
+
   const allBtn = document.getElementById('allYearsBtn');
   const prevBtn = document.getElementById('prevYear');
   const nextBtn = document.getElementById('nextYear');
@@ -413,7 +450,7 @@ function renderAll() {
 
 function renderStats(rows) {
   if (rows.length === 0) {
-    ['statUSD','statZAR','statRate','statCount','statFees'].forEach(id => {
+    ['statPrimary','statSecondary','statRate','statCount','statFees'].forEach(id => {
       document.getElementById(id).textContent = '—';
     });
     return;
@@ -424,11 +461,24 @@ function renderStats(rows) {
   const totalFees = rows.reduce((s, t) => s + t.fee, 0);
   const avgRate   = totalZAR / totalUSD;
   const months    = new Set(rows.map(t => t.date.slice(0,7))).size;
+  const monthStr  = `across ${months} month${months !== 1 ? 's' : ''}`;
 
-  document.getElementById('statUSD').textContent    = fmtUSD(totalUSD);
-  document.getElementById('statUSDsub').textContent = `across ${months} month${months !== 1 ? 's' : ''}`;
-  document.getElementById('statZAR').textContent    = 'R' + fmtNum(totalZAR);
-  document.getElementById('statZARsub').textContent = `at avg R${avgRate.toFixed(2)}/USD`;
+  if (showZAR) {
+    document.getElementById('labelPrimary').textContent    = 'Total Received (ZAR)';
+    document.getElementById('statPrimary').textContent     = 'R' + fmtNum(totalZAR);
+    document.getElementById('statPrimarySub').textContent  = monthStr;
+    document.getElementById('labelSecondary').textContent  = 'Total Sent (USD)';
+    document.getElementById('statSecondary').textContent   = fmtUSD(totalUSD);
+    document.getElementById('statSecondarySub').textContent = `at avg R${avgRate.toFixed(2)}/USD`;
+  } else {
+    document.getElementById('labelPrimary').textContent    = 'Total Sent (USD)';
+    document.getElementById('statPrimary').textContent     = fmtUSD(totalUSD);
+    document.getElementById('statPrimarySub').textContent  = monthStr;
+    document.getElementById('labelSecondary').textContent  = 'Total Received (ZAR)';
+    document.getElementById('statSecondary').textContent   = 'R' + fmtNum(totalZAR);
+    document.getElementById('statSecondarySub').textContent = `at avg R${avgRate.toFixed(2)}/USD`;
+  }
+
   document.getElementById('statRate').textContent   = avgRate.toFixed(2);
   document.getElementById('statCount').textContent  = rows.length;
   document.getElementById('statCountSub').textContent = `${rows.filter(t=>t.usd > 200).length} medical aid + ${rows.filter(t=>t.usd <= 200).length} top ups`;
@@ -437,8 +487,11 @@ function renderStats(rows) {
 
 function renderCharts(rows) {
   const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const tooltipUSD = { callbacks: { label: ctx => ` $${parseFloat(ctx.parsed.y).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}` } };
-  const yUSD = { ticks: { callback: v => '$' + v.toLocaleString() } };
+  const fmtTip = v => showZAR
+    ? ` R${parseFloat(v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+    : ` $${parseFloat(v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+  const tooltipUSD = { callbacks: { label: ctx => fmtTip(ctx.parsed.y) } };
+  const yUSD = { ticks: { callback: v => showZAR ? 'R' + Math.round(v).toLocaleString() : '$' + v.toLocaleString() } };
 
   function dateLabel(dateStr) {
     const [y, m, d] = dateStr.split('-');
@@ -459,7 +512,7 @@ function renderCharts(rows) {
     const monthMap = {};
     filtered.forEach(t => {
       const m = t.date.slice(0, 7);
-      monthMap[m] = (monthMap[m] || 0) + t.usd;
+      monthMap[m] = (monthMap[m] || 0) + (showZAR ? t.zar : t.usd);
     });
     const months = Object.keys(monthMap).sort();
     const vals   = months.map(m => +monthMap[m].toFixed(2));
@@ -508,13 +561,13 @@ function renderCharts(rows) {
             filter: item => item.datasetIndex === 0,
             callbacks: {
               title: ctx => months[ctx[0].dataIndex],
-              label: ctx => ` $${ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+              label: ctx => fmtTip(ctx.parsed.y)
             }
           }
         },
         scales: {
           x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
-          y: { ticks: { callback: v => '$' + v.toLocaleString() } }
+          y: { ticks: { callback: v => showZAR ? 'R' + Math.round(v).toLocaleString() : '$' + v.toLocaleString() } }
         }
       }
     });
@@ -523,7 +576,7 @@ function renderCharts(rows) {
   function buildDailyLine(canvasId, inst, label, filterFn, color, yearLabelsOnly = false) {
     const filtered = [...rows].filter(filterFn).sort((a,b) => a.date.localeCompare(b.date));
     const labels = filtered.map(t => dateLabel(t.date));
-    const vals   = filtered.map(t => t.usd);
+    const vals   = filtered.map(t => showZAR ? t.zar : t.usd);
     const colors = filtered.map(t => pointColor(t.date));
     const trend  = linearRegression(vals);
 
@@ -576,7 +629,7 @@ function renderCharts(rows) {
             filter: item => item.datasetIndex === 0,
             callbacks: {
               title: ctx => filtered[ctx[0].dataIndex].date,
-              label: ctx => ` $${ctx.parsed.y.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}`
+              label: ctx => fmtTip(ctx.parsed.y)
             }
           }
         },
@@ -589,7 +642,7 @@ function renderCharts(rows) {
                 }
               }
             : { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 16 } },
-          y: { ticks: { callback: v => '$' + v.toLocaleString() } }
+          y: { ticks: { callback: v => showZAR ? 'R' + Math.round(v).toLocaleString() : '$' + v.toLocaleString() } }
         }
       }
     });
@@ -676,12 +729,13 @@ function renderCharts(rows) {
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
   let cum = 0;
   const cumLabels = sorted.map(t => allYears ? t.date.slice(2,7) : t.date.slice(5));
-  const cumVals   = sorted.map(t => { cum += t.usd; return +cum.toFixed(2); });
+  const cumVals   = sorted.map(t => { cum += showZAR ? t.zar : t.usd; return +cum.toFixed(2); });
+  document.getElementById('cumulativeTitle').textContent = showZAR ? 'Cumulative ZAR Received' : 'Cumulative USD Sent';
 
   if (cumulativeInst) cumulativeInst.destroy();
   cumulativeInst = new Chart(document.getElementById('cumulativeChart'), {
     type: 'line',
-    data: { labels: cumLabels, datasets: [{ label: 'Cumulative USD', data: cumVals,
+    data: { labels: cumLabels, datasets: [{ label: showZAR ? 'Cumulative ZAR' : 'Cumulative USD', data: cumVals,
       borderColor: '#2d7a4f', backgroundColor: 'rgba(45,122,79,0.08)',
       fill: true, tension: 0.2, pointRadius: 2, pointBackgroundColor: '#2d7a4f' }] },
     options: { responsive: true, plugins: { legend: { display: false }, tooltip: tooltipUSD }, scales: { y: yUSD } }
@@ -753,17 +807,25 @@ function renderTable(rows) {
     return;
   }
 
+  document.getElementById('thUSD').textContent = showZAR ? 'ZAR Received ↕' : 'USD Sent ↕';
+  document.getElementById('thZAR').textContent = showZAR ? 'USD Sent ↕'     : 'ZAR Received ↕';
+
   tbody.innerHTML = sorted.map(t => {
     const rate  = (t.zar / t.usd).toFixed(2);
     const type  = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
     const badge = t.usd > 200 ? 'badge-monthly' : 'badge-weekly';
+    const col1  = showZAR ? `R${fmtNum(t.zar)}`  : fmtUSD(t.usd);
+    const col2  = showZAR ? fmtUSD(t.usd)         : `R${fmtNum(t.zar)}`;
+    const feeDisp = showZAR
+      ? `R${fmtNum(t.fee * parseFloat(rate))}`
+      : fmtUSD(t.fee);
     return `<tr>
       <td>${formatDate(t.date)}</td>
       <td><span class="badge ${badge}">${type}</span></td>
-      <td class="usd-cell">${fmtUSD(t.usd)}</td>
-      <td class="zar-cell">R${fmtNum(t.zar)}</td>
+      <td class="usd-cell">${col1}</td>
+      <td class="zar-cell">${col2}</td>
       <td class="rate-cell">R${rate}</td>
-      <td class="rate-cell">${fmtUSD(t.fee)}</td>
+      <td class="rate-cell">${feeDisp}</td>
       <td class="rate-cell" style="font-family:monospace;font-size:0.74rem">${t.ref}</td>
     </tr>`;
   }).join('');
@@ -781,6 +843,10 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
   });
 });
 
+// ── Currency toggle ───────────────────────────────────────────────────────────
+document.getElementById('btnUSD').addEventListener('click', () => { showZAR = false; saveNavState(); renderAll(); });
+document.getElementById('btnZAR').addEventListener('click', () => { showZAR = true;  saveNavState(); renderAll(); });
+
 // ── Year nav ──────────────────────────────────────────────────────────────────
 document.getElementById('prevYear').addEventListener('click', () => { allYears = false; currentYear--; saveNavState(); renderAll(); });
 document.getElementById('nextYear').addEventListener('click', () => { allYears = false; currentYear++; saveNavState(); renderAll(); });
@@ -789,14 +855,23 @@ document.getElementById('allYearsBtn').addEventListener('click', () => { allYear
 // ── Export ────────────────────────────────────────────────────────────────────
 document.getElementById('exportBtn').addEventListener('click', () => {
   const rows = activeTransfers().sort((a,b) => a.date.localeCompare(b.date));
-  const lines = [
-    'Date,Type,USD Sent,ZAR Received,Rate (ZAR/USD),Fee,Reference',
-    ...rows.map(t => {
-      const type = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
-      const rate = (t.zar / t.usd).toFixed(2);
-      return `${t.date},${type},${t.usd},${t.zar},${rate},${t.fee},${t.ref}`;
-    })
-  ];
+  const lines = showZAR
+    ? [
+        'Date,Type,ZAR Received,USD Sent,Rate (ZAR/USD),Fee (ZAR),Reference',
+        ...rows.map(t => {
+          const type = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
+          const rate = (t.zar / t.usd).toFixed(2);
+          return `${t.date},${type},${t.zar},${t.usd},${rate},${(t.fee * parseFloat(rate)).toFixed(2)},${t.ref}`;
+        })
+      ]
+    : [
+        'Date,Type,USD Sent,ZAR Received,Rate (ZAR/USD),Fee (USD),Reference',
+        ...rows.map(t => {
+          const type = t.usd > 200 ? 'Monthly Medical Aid' : 'Top Up';
+          const rate = (t.zar / t.usd).toFixed(2);
+          return `${t.date},${type},${t.usd},${t.zar},${rate},${t.fee},${t.ref}`;
+        })
+      ];
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
   a.download = `asanda-transfers-${currentYear}.csv`;

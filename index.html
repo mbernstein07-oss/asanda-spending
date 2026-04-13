@@ -530,6 +530,22 @@ function renderCharts(rows) {
   });
   medAidInst = buildDailyLine('medAidChart', medAidInst, 'Monthly Medical Aid', t => t.usd > 200,  '#5bb87a', false);
 
+  // Dismiss stuck tooltips on all charts when mouse leaves canvas
+  [
+    ['topUpChart',    () => topUpInst],
+    ['medAidChart',   () => medAidInst],
+    ['cumulativeChart', () => cumulativeInst],
+    ['rateChart',     () => rateInst],
+  ].forEach(([id, getter]) => {
+    const el = document.getElementById(id);
+    el.onmouseleave = () => {
+      const inst = getter();
+      if (!inst) return;
+      inst.tooltip.setActiveElements([], {});
+      inst.update('none');
+    };
+  });
+
   // Cumulative chart
   const sorted = [...rows].sort((a,b) => a.date.localeCompare(b.date));
   let cum = 0;

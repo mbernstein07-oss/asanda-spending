@@ -77,17 +77,26 @@
         "Food spending → ShopRite gift cards",
         "Transport spending → Uber",
         "Taxis → petty cash",
-        "Meds → Clicks pharmacy gift card or his Momentum debit account"
+        "Meds → Clicks pharmacy gift card or his Momentum debit account",
+        "Uber gift cards: Codashop — takes card payments directly (not just crypto), instant delivery, no registration",
+        "ShopRite gift cards: Bitrefill — buy with a US card via their card-to-crypto onramp, instant email delivery, carries plain + XtraSavings Shoprite cards",
+        "Clicks gift cards: no online purchase path found (in-store only in SA, not on Bitrefill/Codashop) — either have a local contact (Karl, Muneez, Wewe) buy in-store and reimburse, or skip the gift card and route meds through the Momentum HealthSaver debit card instead (see Momentum plan)"
       ],
-      "notes": "Still to do: set up the gift card purchasing systems for ShopRite / Uber / Clicks, and hunt for deals on all three."
+      "notes": "Note: the 'ShopRite' coupon codes you'll find under simplycodes.com etc. are the unrelated US grocery chain — ignore those, they're not South Africa's Shoprite."
     },
     {
       "id": "gifts",
       "title": "Gifts",
-      "status": "todo",
+      "status": "planning",
       "summary": "Buy gifts in Cape Town to bring back to the USA.",
-      "details": [],
-      "notes": ""
+      "details": [
+        "Greenmarket Square (CBD) — beadwork, carvings, jewelry, classic and easy to bargain",
+        "Neighbourgoods Market, Old Biscuit Mill, Woodstock — artisanal goods, leather, textiles (Saturdays)",
+        "Watershed, V&A Waterfront — indoor, curated local designers (jewelry, ceramics, homeware), easy browsing if short on time",
+        "Long Street Market — curios, art, textiles",
+        "Hout Bay Market — weekends, more local / less touristy"
+      ],
+      "notes": "All pack-friendly (small goods, not furniture-scale) — matches the checked-bag capacity noted under Donations."
     },
     {
       "id": "donations",
@@ -103,10 +112,14 @@
     {
       "id": "story",
       "title": "Story",
-      "status": "todo",
+      "status": "planning",
       "summary": "Write down Asanda's story for a future fundraiser or profile.",
-      "details": [],
-      "notes": ""
+      "details": [
+        "Record the conversation in Xhosa — phone voice memo is fine; a small handheld recorder (e.g. Zoom H1n) helps if it's noisy",
+        "Translate with TransWord.ai or Kapwing — both handle Xhosa audio directly, split it into timestamped segments, give an editable transcript + English translation",
+        "Have a human Xhosa speaker review the AI draft before it's used publicly — machine translation tends to flatten emotional register, and this is for a fundraiser"
+      ],
+      "notes": "No purchase strictly required — both translation tools are free/low-cost web tools."
     },
     {
       "id": "people",
@@ -163,13 +176,18 @@
     {
       "id": "momentum",
       "title": "Momentum plan",
-      "status": "todo",
+      "status": "planning",
       "summary": "Visit the Momentum office to sort Asanda's medical aid tier going forward.",
       "details": [
         "Work out how to make annual payments",
-        "Discuss getting a social worker involved"
+        "Discuss getting a social worker involved",
+        "Custom Option = hospital-only, no day-to-day account. Incentive Option = hospital + a day-to-day savings account (10% of contribution auto-allocated) — probably the better structural fit given we're currently hand-routing his food/transport/meds spending, but confirm the premium difference in person",
+        "The 'Momentum debit account' = HealthSaver — a linked savings account/card, debits at approved providers including pharmacies (Clicks qualifies), min R100/month via debit order, unused balance rolls over",
+        "Social worker isn't a standalone benefit — it's bundled into the medical rehabilitation benefit (private nursing, hospice, step-down care), approved case-by-case. Ask directly whether Asanda's situation qualifies",
+        "Ask whether his transplant follow-up care is protected as a Prescribed Minimum Benefit regardless of plan option — South African schemes are legally required to cover PMBs on every plan, which could mean the Custom/Incentive choice matters less for his core care and more for day-to-day cash flow",
+        "Also ask about the mental health benefit (covers a defined list of diagnoses — relevant given the therapist visit already planned) and Multiply rewards (discounts for health check participation)"
       ],
-      "notes": ""
+      "notes": "Researched Aug 2026 from Momentum's public plan pages — confirm current numbers in person, they change year to year."
     },
     {
       "id": "fun",
@@ -182,12 +200,13 @@
         "★ Jill Scott — Grand Arena, GrandWest — Nov 11, 20:00",
         "Cape Town Concert Series — Baxter Concert Hall — Nov 21",
         "V&A Waterfront free live music — Nov 8",
+        "Lipizzaner horse show — Paarl Farms — Nov 14, 11:30 AM–1 PM, could pair with a wine tour day",
         "Rugby: no November Stormers fixtures published yet — recheck stormers.co.za closer to the trip",
         "Football: domestic fixtures aren't out that far ahead — recheck closer to the trip",
         "Hikes: Cape Point Nature Reserve, Skeleton Gorge on Table Mountain",
         "Wine tours: Stellenbosch, Franschhoek, Paarl, Constantia — the Franschhoek Wine Tram is the easy option"
       ],
-      "notes": "★ marks the three most likely: surf lesson, whale watching, Jill Scott."
+      "notes": "★ marks the three most likely: surf lesson, whale watching, Jill Scott. Checked and ruled out: Kirstenbosch Summer Sunset Concerts (2026/27 season lineup covering this trip not announced yet — recheck closer to the date) and Taste of Cape Town food festival (confirmed Nov 28–29, after you've already flown home)."
     }
   ],
   "calendar": [
@@ -197,6 +216,7 @@
     { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "Ask for the Windscreen / Tyre / 3rd Party Damage Waiver" },
     { "date": "2026-11-08", "title": "V&A Waterfront live music", "type": "fun", "notes": "Free" },
     { "date": "2026-11-11", "title": "Jill Scott — GrandWest", "type": "fun", "notes": "Grand Arena, 20:00" },
+    { "date": "2026-11-14", "title": "Lipizzaner horse show — Paarl", "type": "fun", "notes": "Paarl Farms, 11:30 AM–1 PM — pair with a wine tour" },
     { "date": "2026-11-21", "title": "Cape Town Concert Series", "type": "fun", "notes": "Baxter Concert Hall" },
     { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Leave margin for the 8:50 PM flight" },
     { "date": "2026-11-21", "title": "UA2222 departs CPT 8:50 PM", "type": "travel", "notes": "Arrives EWR Nov 22, 5:50 AM" }

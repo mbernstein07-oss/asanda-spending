@@ -342,8 +342,8 @@
       cursor: default;
       word-break: break-word;
     }
-    .editing .cal-event { cursor: pointer; }
-    .editing .cal-event:hover { filter: brightness(0.94); }
+    .cal-event { cursor: pointer; }
+    .cal-event:hover { filter: brightness(0.94); }
     .ev-travel  { background: var(--slate-soft);  color: var(--slate); }
     .ev-car     { background: var(--amber-soft);  color: var(--amber); }
     .ev-fun     { background: var(--accent-soft); color: var(--accent); }
@@ -365,7 +365,7 @@
       font-family: inherit;
       padding: 0;
     }
-    .editing .cal-day:not(.empty):hover .cal-add { display: block; }
+    .cal-day:not(.empty):hover .cal-add { display: block; }
     .cal-add:hover { background: var(--accent2); color: #fff; }
 
     .legend {
@@ -470,7 +470,7 @@
   <section>
     <div class="sec-head">
       <h2>Planning list</h2>
-      <button class="btn btn-sm" id="addItemBtn" style="display:none">+ Add item</button>
+      <button class="btn btn-sm" id="addItemBtn">+ Add item</button>
     </div>
     <div class="items" id="items"></div>
   </section>
@@ -499,7 +499,7 @@
   <section>
     <div class="sec-head">
       <h2>Agenda</h2>
-      <button class="btn btn-sm" id="addEventBtn" style="display:none">+ Add event</button>
+      <button class="btn btn-sm" id="addEventBtn">+ Add event</button>
     </div>
     <div class="cal-card"><div class="agenda" id="agenda"></div></div>
   </section>
@@ -517,7 +517,7 @@ const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct
 
 let data = null;        // working copy (may include local edits)
 let published = null;   // the version fetched from capetown.json
-let editing = false;
+let editingItems = new Set(); // ids of items currently in edit mode
 let dirty = false;
 let staleLocal = false; // local edits were made against an older published version
 let calYear, calMonth;
@@ -566,14 +566,11 @@ function discardLocal() {
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render() {
-  document.getElementById('root').classList.toggle('editing', editing);
   renderChrome();
   renderLogistics();
   renderItems();
   renderCalendar();
   renderAgenda();
-  document.getElementById('addItemBtn').style.display = editing ? '' : 'none';
-  document.getElementById('addEventBtn').style.display = editing ? '' : 'none';
 }
 
 function renderChrome() {
@@ -607,9 +604,6 @@ function renderChrome() {
   // Toolbar
   const tb = document.getElementById('toolbar');
   tb.innerHTML = '';
-  tb.appendChild(button(editing ? 'Done editing' : '✎ Edit', editing ? 'btn btn-primary' : 'btn', () => {
-    editing = !editing; render();
-  }));
   if (dirty) {
     tb.appendChild(button('⧉ Copy JSON', 'btn', copyJSON));
     tb.appendChild(button('⬇ Download', 'btn', downloadJSON));
@@ -646,22 +640,53 @@ function renderLogistics() {
 function renderItems() {
   const el = document.getElementById('items');
   el.innerHTML = '';
-  data.items.forEach((item, idx) => el.appendChild(editing ? itemEditor(item, idx) : itemView(item)));
+  data.items.forEach((item, idx) =>
+    el.appendChild(editingItems.has(item.id) ? itemEditor(item, idx) : itemView(item, idx)));
 }
 
-function itemView(item) {
+function itemView(item, idx) {
   const d = document.createElement('div');
   d.className = 'item' + (item.status === 'done' ? ' done' : '');
-  d.innerHTML = `
-    <div class="item-head">
-      <div class="item-title">${esc(item.title)}</div>
-      <span class="pill pill-${esc(item.status)}">${esc(item.status)}</span>
-    </div>
-    ${item.summary ? `<div class="item-summary">${esc(item.summary)}</div>` : ''}
-    ${item.details && item.details.length
-      ? `<ul class="item-details">${item.details.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-    ${item.notes ? `<div class="item-notes">${esc(item.notes)}</div>` : ''}
-  `;
+
+  const head = document.createElement('div');
+  head.className = 'item-head';
+  const title = document.createElement('div');
+  title.className = 'item-title';
+  title.textContent = item.title;
+  const right = document.createElement('div');
+  right.className = 'item-head-right';
+  const pill = document.createElement('span');
+  pill.className = 'pill pill-' + item.status;
+  pill.textContent = item.status;
+  const editBtn = button('✎', 'btn btn-sm', () => { editingItems.add(item.id); renderItems(); });
+  editBtn.title = 'Edit this item';
+  right.append(pill, editBtn);
+  head.append(title, right);
+  d.appendChild(head);
+
+  if (item.summary) {
+    const s = document.createElement('div');
+    s.className = 'item-summary';
+    s.textContent = item.summary;
+    d.appendChild(s);
+  }
+  if (item.details && item.details.length) {
+    const ul = document.createElement('ul');
+    ul.className = 'item-details';
+    item.details.forEach(x => {
+      const li = document.createElement('li');
+      li.textContent = x;
+      ul.appendChild(li);
+    });
+    d.appendChild(ul);
+  }
+  if (item.notes) {
+    const n = document.createElement('div');
+    n.className = 'item-notes';
+    n.textContent = item.notes;
+    d.appendChild(n);
+  }
+
   return d;
 }
 
@@ -686,11 +711,17 @@ function itemEditor(item, idx) {
 
   const actions = document.createElement('div');
   actions.className = 'item-actions';
+  actions.appendChild(button('✓ Done', 'btn btn-sm btn-primary', () => {
+    editingItems.delete(item.id); renderItems();
+  }));
   actions.appendChild(button('↑', 'btn btn-sm', () => moveItem(idx, -1)));
   actions.appendChild(button('↓', 'btn btn-sm', () => moveItem(idx, 1)));
   const sp = document.createElement('div'); sp.className = 'spacer'; actions.appendChild(sp);
   actions.appendChild(button('Delete', 'btn btn-sm btn-danger', () => {
-    if (confirm(`Delete "${item.title}"?`)) { data.items.splice(idx, 1); persist(); render(); }
+    if (confirm(`Delete "${item.title}"?`)) {
+      editingItems.delete(item.id);
+      data.items.splice(idx, 1); persist(); render();
+    }
   }));
   d.appendChild(actions);
 
@@ -748,7 +779,7 @@ function renderCalendar() {
         ev.className = 'cal-event ev-' + e.type;
         ev.textContent = e.title;
         if (e.notes) ev.title = e.notes;
-        if (editing) ev.onclick = () => openEventModal(i);
+        ev.onclick = () => openEventModal(i);
         el.appendChild(ev);
       });
 
@@ -785,7 +816,7 @@ function renderAgenda() {
         ${e.notes ? `<div class="agenda-notes">${esc(e.notes)}</div>` : ''}
       </div>
     `;
-    if (editing) row.appendChild(button('Edit', 'btn btn-sm', () => openEventModal(i)));
+    row.appendChild(button('Edit', 'btn btn-sm', () => openEventModal(i)));
     el.appendChild(row);
   });
 }
@@ -975,7 +1006,9 @@ document.getElementById('nextMonth').onclick = () => {
   renderCalendar();
 };
 document.getElementById('addItemBtn').onclick = () => {
-  data.items.push({ id: 'item-' + Date.now(), title: 'New item', status: 'todo', summary: '', details: [], notes: '' });
+  const newItem = { id: 'item-' + Date.now(), title: 'New item', status: 'todo', summary: '', details: [], notes: '' };
+  data.items.push(newItem);
+  editingItems.add(newItem.id);
   persist(); render();
   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 };

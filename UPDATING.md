@@ -1,5 +1,9 @@
 # How to update this tracker
 
+> Looking for the Cape Town trip planner? See the "Cape Town trip" section
+> near the bottom of this file — `capetown.html` / `capetown.json` are a
+> separate page from the Remitly tracker below.
+
 This site tracks Remitly transfers to Asanda Mkiva. `index.html` and
 `budget.html` are static pages that read `data.json` — updating means
 adding new transfer records to that file.
@@ -72,3 +76,29 @@ Notes:
 Open `index.html` locally (e.g. `python3 -m http.server` from the repo
 root, then visit `/index.html`) and confirm the new transfer count, total,
 and latest date look right. Then commit and push `data.json`.
+
+---
+
+## Cape Town trip (Nov 7–21, 2026)
+
+`capetown.html` reads `capetown.json` the same way `index.html` reads
+`data.json` — it's a planning page, not a spending tracker, but follows the
+same "static page + JSON" pattern so it's easy to keep updating over time.
+
+`capetown.json` has three parts:
+
+- `trip` — start/end dates and destination, drives the calendar's default
+  month and the highlighted trip range.
+- `items` — the planning checklist (Costs, Gifts, People, Car, Fun, etc).
+  Each has a `status` (`todo` / `planning` / `holding` / `done`), a
+  `summary`, a `details` list, and a free-text `notes` field. Update these
+  as things get resolved — e.g. flip `status` to `"done"` once Kwakhanya's
+  been messaged, or add a line to `details` when a new fact comes in.
+- `calendar` — dated events (`{date, title, type, notes}`) plotted on the
+  calendar grid. `type` is one of `travel` / `car` / `fun` / `meeting` and
+  controls the event's color. Add entries here as plans get pinned to
+  specific days.
+
+To verify, open `capetown.html` locally the same way as above and check the
+list and calendar render as expected, then commit and push
+`capetown.json`.

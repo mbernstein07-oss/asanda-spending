@@ -1,0 +1,136 @@
+{
+  "trip": {
+    "start": "2026-11-07",
+    "end": "2026-11-21",
+    "destination": "Cape Town, South Africa"
+  },
+  "items": [
+    {
+      "id": "costs",
+      "title": "Costs",
+      "status": "planning",
+      "summary": "Streamline Asanda's spending.",
+      "details": [
+        "Food spending → ShopRite gift cards",
+        "Transport spending → Uber",
+        "Taxis → petty cash",
+        "Meds → Clicks pharmacy gift card or his Momentum debit account"
+      ],
+      "notes": "Need to set up gift card purchasing systems for ShopRite/Uber/Clicks and find deals on gift cards for all three."
+    },
+    {
+      "id": "gifts",
+      "title": "Gifts",
+      "status": "todo",
+      "summary": "Buy gifts in Cape Town to bring back to the USA.",
+      "details": [],
+      "notes": ""
+    },
+    {
+      "id": "donations",
+      "title": "Donations",
+      "status": "todo",
+      "summary": "Bring donation items as gifts for SA friends, plus a nonprofit donation.",
+      "details": [
+        "Gather / pack everything before the trip (checked luggage)"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "story",
+      "title": "Story",
+      "status": "todo",
+      "summary": "Write down Asanda's story for a future fundraiser or profile.",
+      "details": [],
+      "notes": ""
+    },
+    {
+      "id": "people",
+      "title": "Ppl / Meetings",
+      "status": "planning",
+      "summary": "People and organizations to meet with in Cape Town.",
+      "details": [
+        "Sokoyi family",
+        "Ndlagalavu family",
+        "Wewe",
+        "Afro",
+        "Muneez",
+        "Karl",
+        "Chris Campbell Memorial Field",
+        "Maji",
+        "Asanda's transplant coordinator",
+        "Asanda's doctor",
+        "Asanda's therapist"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "car",
+      "title": "Car",
+      "status": "planning",
+      "summary": "Avis reservation #22695383US4 — pickup Nov 8 at Cape Town Intl Airport, drop-off Nov 21. VW Polo Vivo.",
+      "details": [
+        "At counter: request the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to raise third-party liability above the standard ~R6,000,000 cap — relevant since some driving is through Khayelitsha",
+        "Can't be pre-booked — must be added at pickup (international rate)"
+      ],
+      "notes": "Confirmed with Avis reservations (Aug 17 2026 email thread)."
+    },
+    {
+      "id": "kwakhanya",
+      "title": "Kwakhanya",
+      "status": "holding",
+      "summary": "Message Kwakhanya Dudumashe before traveling to reconnect.",
+      "details": [
+        "dudumashekwakhanya89@gmail.com",
+        "Last contact: May 2025"
+      ],
+      "notes": "Holding — draft message closer to the trip."
+    },
+    {
+      "id": "campbell-ryan",
+      "title": "Campbell / Ryan",
+      "status": "holding",
+      "summary": "Write to Chris Campbell and Ryan McGonigle before traveling.",
+      "details": [],
+      "notes": "Holding — draft message closer to the trip."
+    },
+    {
+      "id": "momentum",
+      "title": "Momentum plan",
+      "status": "todo",
+      "summary": "Visit the Momentum office to sort Asanda's medical aid tier going forward.",
+      "details": [
+        "Figure out how to make annual payments",
+        "Discuss a social worker for Asanda"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "fun",
+      "title": "Fun",
+      "status": "planning",
+      "summary": "Surf lessons, day trips, hikes, wine tours, concerts, football/rugby matches, anything exciting going on.",
+      "details": [
+        "⭐ Surf lesson (Muizenberg) — Gary's Surf School or Surf Emporium; Nov is a good beginner window",
+        "⭐ Whale watching in Hermanus (southern right whales through Nov, ~90 min from CT)",
+        "⭐ Jill Scott — Grand Arena, GrandWest — Nov 11, 20:00",
+        "Cape Town Concert Series — Baxter Concert Hall — Nov 21",
+        "V&A Waterfront free live music — Nov 8",
+        "Rugby: no Nov 2026 Stormers/DHL Stadium fixtures published yet — recheck stormers.co.za closer to the trip",
+        "Football: domestic fixtures not published that far out yet — recheck closer to the trip",
+        "Hikes: Cape Point Nature Reserve, Skeleton Gorge (Table Mountain)",
+        "Wine tours: Cape Winelands (Stellenbosch, Franschhoek, Paarl, Constantia) — Franschhoek Wine Tram is a popular option"
+      ],
+      "notes": "⭐ = ones Matt said he's likely to actually do: surf lesson, whale watching, Jill Scott."
+    }
+  ],
+  "calendar": [
+    { "date": "2026-11-07", "title": "Trip starts", "type": "travel", "notes": "" },
+    { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "Ask for the Windscreen/Tyre/3rd Party Damage Waiver at the counter" },
+    { "date": "2026-11-08", "title": "V&A Waterfront free live music", "type": "fun", "notes": "" },
+    { "date": "2026-11-11", "title": "Jill Scott — Grand Arena, GrandWest", "type": "fun", "notes": "20:00" },
+    { "date": "2026-11-21", "title": "Cape Town Concert Series — Baxter Concert Hall", "type": "fun", "notes": "" },
+    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "" },
+    { "date": "2026-11-21", "title": "Trip ends", "type": "travel", "notes": "" }
+  ]
+}

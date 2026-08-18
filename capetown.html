@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cape Town Trip — Planning</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f9f8;
+      --surface: #ffffff;
+      --border: #e2e8e4;
+      --text: #1a2e22;
+      --muted: #6b8070;
+      --accent: #2d7a4f;
+      --accent2: #5bb87a;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    header {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+    header p  { font-size: 0.83rem; color: var(--muted); margin-top: 3px; }
+
+    .back-link {
+      font-size: 0.83rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Items list ── */
+    .item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .item + .item { margin-top: 12px; }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .item-title { font-size: 1rem; font-weight: 700; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+      text-transform: capitalize;
+    }
+    .badge-todo     { background: #f1f0f5; color: #5b5b70; }
+    .badge-planning { background: #fff3e0; color: #b45309; }
+    .badge-holding  { background: #e8eef7; color: #2f5fa3; }
+    .badge-done     { background: #e8f0eb; color: var(--accent); }
+
+    .item-summary { font-size: 0.87rem; color: var(--text); margin-top: 6px; }
+
+    .item-details {
+      margin-top: 10px;
+      padding-left: 18px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-notes {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--text);
+      background: var(--bg);
+      border-left: 3px solid var(--accent2);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+    .item-notes:empty { display: none; }
+
+    /* ── Calendar ── */
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .cal-nav button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .cal-nav button:hover { background: #eef3f0; }
+    .cal-label { font-size: 0.95rem; font-weight: 700; color: var(--accent); }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .cal-dow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      padding-bottom: 4px;
+    }
+    .cal-day {
+      min-height: 76px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 6px;
+      font-size: 0.78rem;
+      background: var(--surface);
+    }
+    .cal-day.empty { background: transparent; border-color: transparent; }
+    .cal-day.trip { background: #f4f9f6; border-color: var(--accent2); }
+    .cal-daynum { font-weight: 700; color: var(--muted); }
+    .cal-day.trip .cal-daynum { color: var(--accent); }
+    .cal-event {
+      margin-top: 3px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+    .cal-event.travel { background: #f1f0f5; color: #5b5b70; }
+    .cal-event.car     { background: #fff3e0; color: #b45309; }
+    .cal-event.fun     { background: #e8f0eb; color: var(--accent); }
+    .cal-event.meeting { background: #e8eef7; color: #2f5fa3; }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🇿🇦 Cape Town Trip</h1>
+    <p id="tripDates">Nov 7 – 21, 2026</p>
+    <a href="./index.html" class="back-link" style="margin-top:8px;">← Back to Asanda tracker</a>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="card">
+    <h2>Planning List</h2>
+    <div id="itemsList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Calendar</h2>
+    <div class="cal-nav">
+      <button id="prevMonth">&#8592;</button>
+      <div class="cal-label" id="calLabel"></div>
+      <button id="nextMonth">&#8594;</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="legend">
+      <span><i style="background:#f1f0f5"></i>Travel</span>
+      <span><i style="background:#fff3e0"></i>Car</span>
+      <span><i style="background:#e8f0eb"></i>Fun</span>
+      <span><i style="background:#e8eef7"></i>Meeting</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let data = null;
+let calYear, calMonth; // 0-indexed month
+
+async function init() {
+  const res = await fetch('./capetown.json?_=' + Date.now());
+  data = await res.json();
+
+  document.getElementById('tripDates').textContent =
+    formatRange(data.trip.start, data.trip.end) + ' · ' + data.trip.destination;
+
+  renderItems();
+
+  const start = new Date(data.trip.start + 'T00:00:00');
+  calYear = start.getFullYear();
+  calMonth = start.getMonth();
+  renderCalendar();
+}
+
+function renderItems() {
+  const container = document.getElementById('itemsList');
+  container.innerHTML = data.items.map(item => `
+    <div class="item">
+      <div class="item-head">
+        <div class="item-title">${item.title}</div>
+        <span class="badge badge-${item.status}">${item.status}</span>
+      </div>
+      <div class="item-summary">${item.summary}</div>
+      ${item.details.length ? `<ul class="item-details">${item.details.map(d => `<li>${d}</li>`).join('')}</ul>` : ''}
+      <div class="item-notes">${item.notes || ''}</div>
+    </div>
+  `).join('');
+}
+
+function renderCalendar() {
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calLabel').textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  const startOffset = firstDay.getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  const tripStart = data.trip.start;
+  const tripEnd = data.trip.end;
+
+  for (let i = 0; i < startOffset; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const inTrip = dateStr >= tripStart && dateStr <= tripEnd;
+    const events = data.calendar.filter(e => e.date === dateStr);
+
+    const el = document.createElement('div');
+    el.className = 'cal-day' + (inTrip ? ' trip' : '');
+    el.innerHTML = `<div class="cal-daynum">${d}</div>` +
+      events.map(e => `<div class="cal-event ${e.type}" title="${e.notes || ''}">${e.title}</div>`).join('');
+    grid.appendChild(el);
+  }
+}
+
+function formatRange(startStr, endStr) {
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [sy, sm, sd] = startStr.split('-').map(Number);
+  const [ey, em, ed] = endStr.split('-').map(Number);
+  if (sy === ey && sm === em) {
+    return `${MONTH_NAMES[sm-1]} ${sd} – ${ed}, ${ey}`;
+  }
+  return `${MONTH_NAMES[sm-1]} ${sd}, ${sy} – ${MONTH_NAMES[em-1]} ${ed}, ${ey}`;
+}
+
+document.getElementById('prevMonth').addEventListener('click', () => {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+});
+document.getElementById('nextMonth').addEventListener('click', () => {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+});
+
+init();
+</script>
+</body>
+</html>

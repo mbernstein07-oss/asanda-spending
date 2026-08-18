@@ -184,6 +184,18 @@
       "notes": "Holding — pick this back up once we have record access."
     },
     {
+      "id": "gofundme",
+      "title": "Asanda GoFundMe",
+      "status": "holding",
+      "summary": "Prepare Asanda's GoFundMe.",
+      "details": [
+        "Requires organizing all his medical records",
+        "Also gather Clicks pharmacy purchase history / receipts as spending evidence",
+        "Can likely reuse the translated Story once that's done"
+      ],
+      "notes": "Holding — blocked on Medical Records (record access) same as that item."
+    },
+    {
       "id": "volunteering",
       "title": "Asanda Volunteering",
       "status": "todo",

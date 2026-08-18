@@ -184,6 +184,14 @@
       "notes": "Holding — pick this back up once we have record access."
     },
     {
+      "id": "volunteering",
+      "title": "Asanda Volunteering",
+      "status": "todo",
+      "summary": "Find an organization that will let Asanda volunteer a day or so a week.",
+      "details": [],
+      "notes": ""
+    },
+    {
       "id": "momentum",
       "title": "Momentum plan",
       "status": "planning",

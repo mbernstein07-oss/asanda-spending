@@ -4,19 +4,82 @@
     "end": "2026-11-21",
     "destination": "Cape Town, South Africa"
   },
+  "logistics": [
+    {
+      "id": "flight-out",
+      "kind": "flight",
+      "label": "Outbound",
+      "headline": "UA1122 · EWR → CPT",
+      "lines": [
+        "Dep Fri Nov 6, 8:35 PM — Newark (EWR)",
+        "Arr Sat Nov 7, 6:00 PM — Cape Town (CPT)",
+        "United Economy (W) · seat 50A"
+      ],
+      "ref": "Conf G7XXZT · eTicket 0167545935190"
+    },
+    {
+      "id": "flight-back",
+      "kind": "flight",
+      "label": "Return",
+      "headline": "UA2222 · CPT → EWR",
+      "lines": [
+        "Dep Sat Nov 21, 8:50 PM — Cape Town (CPT)",
+        "Arr Sun Nov 22, 5:50 AM — Newark (EWR)",
+        "United Economy (W) · seat 53C"
+      ],
+      "ref": "Conf G7XXZT · $1,930.13 airfare"
+    },
+    {
+      "id": "stay",
+      "kind": "stay",
+      "label": "Stay",
+      "headline": "Secret Sunsets in Gardens",
+      "lines": [
+        "Drury Ln, Gardens, Cape Town 8001",
+        "Check-in Sat Nov 7 after 3:00 PM",
+        "Checkout Sun Nov 22 by 10:00 AM",
+        "Host: Gary · +27 64 627 6372"
+      ],
+      "ref": "Airbnb HMF4T5EPB9 · 15 nights · $1,417.67"
+    },
+    {
+      "id": "car",
+      "kind": "car",
+      "label": "Car",
+      "headline": "Avis · VW Polo Vivo",
+      "lines": [
+        "Pick up Sun Nov 8 — Cape Town Intl (CPT)",
+        "Drop off Sat Nov 21",
+        "Manual · unlimited km"
+      ],
+      "ref": "Avis #22695383US4"
+    },
+    {
+      "id": "bags",
+      "kind": "bags",
+      "label": "Baggage",
+      "headline": "2 checked bags each way",
+      "lines": [
+        "1st bag free, 2nd bag $120 (prepaid both ways)",
+        "23 kg / 62 in per bag",
+        "Second-bag refs 0164710758872 (out), 0164710760547 (back)"
+      ],
+      "ref": "Room for donation gear on the way out"
+    }
+  ],
   "items": [
     {
       "id": "costs",
       "title": "Costs",
       "status": "planning",
-      "summary": "Streamline Asanda's spending.",
+      "summary": "Streamline Asanda's spending onto trackable rails.",
       "details": [
         "Food spending → ShopRite gift cards",
         "Transport spending → Uber",
         "Taxis → petty cash",
         "Meds → Clicks pharmacy gift card or his Momentum debit account"
       ],
-      "notes": "Need to set up gift card purchasing systems for ShopRite/Uber/Clicks and find deals on gift cards for all three."
+      "notes": "Still to do: set up the gift card purchasing systems for ShopRite / Uber / Clicks, and hunt for deals on all three."
     },
     {
       "id": "gifts",
@@ -32,7 +95,8 @@
       "status": "todo",
       "summary": "Bring donation items as gifts for SA friends, plus a nonprofit donation.",
       "details": [
-        "Gather / pack everything before the trip (checked luggage)"
+        "Gather and pack everything before the trip",
+        "Two checked bags each way are already paid for — 23 kg each on the outbound"
       ],
       "notes": ""
     },
@@ -48,7 +112,7 @@
       "id": "people",
       "title": "Ppl / Meetings",
       "status": "planning",
-      "summary": "People and organizations to meet with in Cape Town.",
+      "summary": "People and organizations to see while in Cape Town.",
       "details": [
         "Sokoyi family",
         "Ndlagalavu family",
@@ -68,23 +132,25 @@
       "id": "car",
       "title": "Car",
       "status": "planning",
-      "summary": "Avis reservation #22695383US4 — pickup Nov 8 at Cape Town Intl Airport, drop-off Nov 21. VW Polo Vivo.",
+      "summary": "Avis #22695383US4 — pick up Nov 8 at CPT, drop off Nov 21.",
       "details": [
-        "At counter: request the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to raise third-party liability above the standard ~R6,000,000 cap — relevant since some driving is through Khayelitsha",
-        "Can't be pre-booked — must be added at pickup (international rate)"
+        "At the counter: ask for the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to lift third-party liability above the standard ~R6,000,000 cap",
+        "Can't be pre-booked — international rate, so it's added at pickup only",
+        "Flight lands Nov 7 at 6 PM but pickup is Nov 8 — need a ride from CPT to Gardens on arrival night",
+        "Return flight is Nov 21 at 8:50 PM — confirm the drop-off time leaves enough margin"
       ],
-      "notes": "Confirmed with Avis reservations (Aug 17 2026 email thread)."
+      "notes": "Waiver detail confirmed by Avis reservations, Aug 17 2026."
     },
     {
       "id": "kwakhanya",
       "title": "Kwakhanya",
       "status": "holding",
-      "summary": "Message Kwakhanya Dudumashe before traveling to reconnect.",
+      "summary": "Message Kwakhanya Dudumashe before traveling, to reconnect.",
       "details": [
         "dudumashekwakhanya89@gmail.com",
         "Last contact: May 2025"
       ],
-      "notes": "Holding — draft message closer to the trip."
+      "notes": "Holding — draft the message closer to the trip."
     },
     {
       "id": "campbell-ryan",
@@ -92,7 +158,7 @@
       "status": "holding",
       "summary": "Write to Chris Campbell and Ryan McGonigle before traveling.",
       "details": [],
-      "notes": "Holding — draft message closer to the trip."
+      "notes": "Holding — draft the message closer to the trip."
     },
     {
       "id": "momentum",
@@ -100,8 +166,8 @@
       "status": "todo",
       "summary": "Visit the Momentum office to sort Asanda's medical aid tier going forward.",
       "details": [
-        "Figure out how to make annual payments",
-        "Discuss a social worker for Asanda"
+        "Work out how to make annual payments",
+        "Discuss getting a social worker involved"
       ],
       "notes": ""
     },
@@ -109,28 +175,30 @@
       "id": "fun",
       "title": "Fun",
       "status": "planning",
-      "summary": "Surf lessons, day trips, hikes, wine tours, concerts, football/rugby matches, anything exciting going on.",
+      "summary": "Surf lessons, day trips, hikes, wine tours, concerts, football and rugby.",
       "details": [
-        "⭐ Surf lesson (Muizenberg) — Gary's Surf School or Surf Emporium; Nov is a good beginner window",
-        "⭐ Whale watching in Hermanus (southern right whales through Nov, ~90 min from CT)",
-        "⭐ Jill Scott — Grand Arena, GrandWest — Nov 11, 20:00",
+        "★ Surf lesson at Muizenberg — Gary's Surf School or Surf Emporium; November is a good beginner window",
+        "★ Whale watching in Hermanus — southern right whales through November, ~90 min from town",
+        "★ Jill Scott — Grand Arena, GrandWest — Nov 11, 20:00",
         "Cape Town Concert Series — Baxter Concert Hall — Nov 21",
         "V&A Waterfront free live music — Nov 8",
-        "Rugby: no Nov 2026 Stormers/DHL Stadium fixtures published yet — recheck stormers.co.za closer to the trip",
-        "Football: domestic fixtures not published that far out yet — recheck closer to the trip",
-        "Hikes: Cape Point Nature Reserve, Skeleton Gorge (Table Mountain)",
-        "Wine tours: Cape Winelands (Stellenbosch, Franschhoek, Paarl, Constantia) — Franschhoek Wine Tram is a popular option"
+        "Rugby: no November Stormers fixtures published yet — recheck stormers.co.za closer to the trip",
+        "Football: domestic fixtures aren't out that far ahead — recheck closer to the trip",
+        "Hikes: Cape Point Nature Reserve, Skeleton Gorge on Table Mountain",
+        "Wine tours: Stellenbosch, Franschhoek, Paarl, Constantia — the Franschhoek Wine Tram is the easy option"
       ],
-      "notes": "⭐ = ones Matt said he's likely to actually do: surf lesson, whale watching, Jill Scott."
+      "notes": "★ marks the three most likely: surf lesson, whale watching, Jill Scott."
     }
   ],
   "calendar": [
-    { "date": "2026-11-07", "title": "Trip starts", "type": "travel", "notes": "" },
-    { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "Ask for the Windscreen/Tyre/3rd Party Damage Waiver at the counter" },
-    { "date": "2026-11-08", "title": "V&A Waterfront free live music", "type": "fun", "notes": "" },
-    { "date": "2026-11-11", "title": "Jill Scott — Grand Arena, GrandWest", "type": "fun", "notes": "20:00" },
-    { "date": "2026-11-21", "title": "Cape Town Concert Series — Baxter Concert Hall", "type": "fun", "notes": "" },
-    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "" },
-    { "date": "2026-11-21", "title": "Trip ends", "type": "travel", "notes": "" }
+    { "date": "2026-11-06", "title": "UA1122 departs EWR 8:35 PM", "type": "travel", "notes": "Overnight to Cape Town" },
+    { "date": "2026-11-07", "title": "Land CPT 6:00 PM", "type": "travel", "notes": "No car until tomorrow — arrange a ride to Gardens" },
+    { "date": "2026-11-07", "title": "Airbnb check-in (after 3 PM)", "type": "stay", "notes": "Secret Sunsets in Gardens · host Gary" },
+    { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "Ask for the Windscreen / Tyre / 3rd Party Damage Waiver" },
+    { "date": "2026-11-08", "title": "V&A Waterfront live music", "type": "fun", "notes": "Free" },
+    { "date": "2026-11-11", "title": "Jill Scott — GrandWest", "type": "fun", "notes": "Grand Arena, 20:00" },
+    { "date": "2026-11-21", "title": "Cape Town Concert Series", "type": "fun", "notes": "Baxter Concert Hall" },
+    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Leave margin for the 8:50 PM flight" },
+    { "date": "2026-11-21", "title": "UA2222 departs CPT 8:50 PM", "type": "travel", "notes": "Arrives EWR Nov 22, 5:50 AM" }
   ]
 }

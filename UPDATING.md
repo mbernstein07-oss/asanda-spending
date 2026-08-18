@@ -83,21 +83,47 @@ and latest date look right. Then commit and push `data.json`.
 
 `capetown.html` reads `capetown.json` the same way `index.html` reads
 `data.json` — it's a planning page, not a spending tracker, but follows the
-same "static page + JSON" pattern so it's easy to keep updating over time.
+same "static page + JSON" pattern.
 
-`capetown.json` has three parts:
+### Editing in the browser (easiest)
 
-- `trip` — start/end dates and destination, drives the calendar's default
-  month and the highlighted trip range.
-- `items` — the planning checklist (Costs, Gifts, People, Car, Fun, etc).
-  Each has a `status` (`todo` / `planning` / `holding` / `done`), a
-  `summary`, a `details` list, and a free-text `notes` field. Update these
-  as things get resolved — e.g. flip `status` to `"done"` once Kwakhanya's
-  been messaged, or add a line to `details` when a new fact comes in.
+The page has an **Edit** button. In edit mode you can rewrite any item,
+change its status, reorder or delete items, add new ones, and add/edit/
+delete calendar events (click a day's `+`, an existing event, or the
+"Add event" button).
+
+GitHub Pages is static, so the page **cannot write back to the repo**.
+Edits are saved to that browser's `localStorage` and survive reloads, and
+an amber banner reminds you they're local-only. To publish them:
+
+1. Hit **⧉ Copy JSON** (or **⬇ Download**) in the header.
+2. Paste the result over `capetown.json` in this repo.
+3. Commit and push.
+
+Once the published file matches, hit **Discard** on the banner to drop the
+local copy and go back to reading straight from the repo. If `capetown.json`
+changes upstream while you still have local edits, the banner switches to a
+"published plan changed" warning and offers **Keep mine** / **Use
+published**.
+
+### Editing the JSON directly
+
+`capetown.json` has four parts:
+
+- `trip` — start/end dates and destination. Drives the countdown, the
+  calendar's default month, and the highlighted trip range.
+- `logistics` — the booked-and-done facts (flights, stay, car, baggage)
+  rendered as cards at the top. Each is
+  `{id, kind, label, headline, lines[], ref}`; `kind` is one of `flight` /
+  `stay` / `car` / `bags` and sets the card's accent color. These are
+  reference data pulled from confirmation emails, so they're not editable
+  in the browser — change them here.
+- `items` — the planning checklist. Each has a `status` (`todo` /
+  `planning` / `holding` / `done`), a `summary`, a `details` list, and a
+  free-text `notes` field. The progress bar counts `done` over total.
 - `calendar` — dated events (`{date, title, type, notes}`) plotted on the
-  calendar grid. `type` is one of `travel` / `car` / `fun` / `meeting` and
-  controls the event's color. Add entries here as plans get pinned to
-  specific days.
+  grid and listed in the agenda. `type` is one of `travel` / `stay` /
+  `car` / `fun` / `meeting` and sets the color.
 
 To verify, open `capetown.html` locally the same way as above and check the
 list and calendar render as expected, then commit and push

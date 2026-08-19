@@ -196,6 +196,14 @@
       "notes": "Holding — blocked on Medical Records (record access) same as that item."
     },
     {
+      "id": "trust-fund",
+      "title": "Trust / Financial Mechanism",
+      "status": "todo",
+      "summary": "Search for a trust or other financial mechanism to hold money raised for Asanda.",
+      "details": [],
+      "notes": "Likely needs to be in place before or alongside the GoFundMe, so the raised money has somewhere proper to land."
+    },
+    {
       "id": "volunteering",
       "title": "Asanda Volunteering",
       "status": "todo",

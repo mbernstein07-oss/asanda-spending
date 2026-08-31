@@ -85,6 +85,14 @@
       "notes": "Note: the 'ShopRite' coupon codes you'll find under simplycodes.com etc. are the unrelated US grocery chain — ignore those, they're not South Africa's Shoprite."
     },
     {
+      "id": "meds-review",
+      "title": "Meds Review",
+      "status": "todo",
+      "summary": "Check all of Asanda's medications to see where costs can be reduced.",
+      "details": [],
+      "notes": ""
+    },
+    {
       "id": "gifts",
       "title": "Gifts",
       "status": "planning",

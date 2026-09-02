@@ -229,6 +229,16 @@
 
 <div class="main">
 
+  <div class="card" id="explainerCard">
+    <h2 style="margin-bottom:10px;">How to read this page</h2>
+    <div style="font-size:0.84rem;line-height:1.65;color:var(--text);display:flex;flex-direction:column;gap:6px;">
+      <div>• <strong>Paid to Provider</strong> — the scheme pays the doctor/pharmacy/hospital directly. Most network providers (pharmacies, the dialysis practice, the hospitals) work this way.</div>
+      <div>• <strong>Paid to You</strong> — some specialists aren't set up for direct payment, so the scheme reimburses <em>you</em> instead, and you're expected to settle with that provider yourself. In this data that's concentrated in a handful of specialists (Dr Martin Forlee Inc, Dr Fatima Khan Inc, Dr G Picken, and a few others) — almost all tied to one hospital admission.</div>
+      <div>• <strong>Partially Paid</strong> — the scheme pays at its own tariff rate, and you're liable for the gap between that and what the provider actually billed. This is the <strong>biggest real cost</strong> in the data — bigger than rejections.</div>
+      <div>• <strong>Rejected</strong> — not one thing. About half of "rejected" R is claims <em>reversed by the supplier</em> (resubmitted, no cost to you). The rest breaks down into real categories below — day-to-day funds being empty is the largest of those.</div>
+    </div>
+  </div>
+
   <div class="stats-row" id="statsRow">
     <div class="stat-card">
       <div class="stat-label">Total Claims</div>
@@ -255,6 +265,11 @@
       <div class="stat-value warn" id="statRejected">—</div>
       <div class="stat-sub" id="statRejectedSub">—</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">Partial-Pay Shortfall</div>
+      <div class="stat-value warn" id="statShortfall">—</div>
+      <div class="stat-sub" id="statShortfallSub">—</div>
+    </div>
   </div>
 
   <div class="charts-grid">
@@ -270,12 +285,23 @@
 
   <div class="charts-grid">
     <div class="chart-wrap">
+      <h3>Partial-Pay Shortfall R — by Provider (the real money)</h3>
+      <div class="insight-list" id="shortfallByProvider"></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Rejected R — by Category</h3>
+      <div class="insight-list" id="rejectedByReason"></div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-wrap">
       <h3>Rejected R — by Provider (cost-reduction targets)</h3>
       <div class="insight-list" id="rejectedByProvider"></div>
     </div>
     <div class="chart-wrap">
-      <h3>Rejected R — by Reason</h3>
-      <div class="insight-list" id="rejectedByReason"></div>
+      <h3>Reimbursed-to-You R — by Provider</h3>
+      <div class="insight-list" id="reimbByProvider"></div>
     </div>
   </div>
 
@@ -372,6 +398,8 @@ function renderStats() {
   const toYou = claims.reduce((s,c) => s + c.amount_to_you, 0);
   const rejected = claims.filter(isRejected);
   const rejectedAmt = rejected.reduce((s,c) => s + c.claim_amount, 0);
+  const partial = claims.filter(c => c.status === 'Partially paid');
+  const shortfallAmt = partial.reduce((s,c) => s + shortfall(c), 0);
 
   const dates = claims.map(c => c.date).sort();
 
@@ -381,7 +409,29 @@ function renderStats() {
   document.getElementById('statToProvider').textContent = fmtR(toProvider);
   document.getElementById('statToYou').textContent = fmtR(toYou);
   document.getElementById('statRejected').textContent = fmtR(rejectedAmt);
-  document.getElementById('statRejectedSub').textContent = `${rejected.length} claims (${(rejected.length/count*100).toFixed(0)}%)`;
+  document.getElementById('statRejectedSub').textContent = `${rejected.length} claims (${(rejected.length/count*100).toFixed(0)}%) — about half is supplier reversals, not real cost`;
+  document.getElementById('statShortfall').textContent = fmtR(shortfallAmt);
+  document.getElementById('statShortfallSub').textContent = `${partial.length} claims — gap you're liable for above the scheme rate`;
+}
+
+function shortfall(c) { return Math.max(0, c.claim_amount - c.amount_to_provider - c.amount_to_you); }
+
+// Buckets a rejection/partial-payment reason into a human category.
+// Order matters -- more specific checks first.
+function categorize(reasonRaw) {
+  const r = (reasonRaw || '').toLowerCase();
+  if (!r.trim()) return '(no reason captured)';
+  if (r.includes('reversed')) return 'Reversed/resubmitted by supplier (not a real cost)';
+  if (r.includes('no day-to-day funds')) return 'No day-to-day funds available';
+  if (r.includes('duplicate')) return 'Duplicate claim';
+  if (r.includes('does not match')) return 'Billing mismatch (specialist/anaesthetist codes)';
+  if (r.includes('drug utilisation') || r.includes('medicine interaction') || r.includes('exceeds the recommended daily dosage')) return 'Drug rule (dosage/interaction)';
+  if (r.includes('authorisation')) return 'Missing pre-authorisation';
+  if (r.includes('not liable for payment of the tariff')) return 'Tariff/modifier not covered by scheme';
+  if (r.includes('liable for a co-payment') || r.includes('exceeds the fund/scheme rate')) return 'Above scheme rate — you owe the difference';
+  if (r.includes('full details of the assistant')) return 'Missing provider details on claim';
+  if (r.includes('invalid patient') || r.includes('tariff code on the claim not recognised')) return 'Claim needs to be corrected/resubmitted';
+  return 'Other/uncategorized';
 }
 
 function renderCharts() {
@@ -435,29 +485,40 @@ function renderCharts() {
   });
 }
 
+function insightList(elId, entries, emptyLabel) {
+  const el = document.getElementById(elId);
+  el.innerHTML = entries.map(([name, amt]) => `
+    <div class="insight-row"><span class="insight-name">${esc(name)}</span><span class="insight-amt">${fmtR(amt)}</span></div>
+  `).join('') || `<div class="insight-row"><span class="insight-name">${esc(emptyLabel)}</span></div>`;
+}
+
+function topEntries(map, n) {
+  return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0, n);
+}
+
 function renderInsights() {
   const rejected = claims.filter(isRejected);
+  const partial = claims.filter(c => c.status === 'Partially paid');
+  const reimbursed = claims.filter(c => c.amount_to_you > 0);
 
-  const byProvider = {};
-  rejected.forEach(c => { byProvider[c.provider || 'Unknown'] = (byProvider[c.provider || 'Unknown'] || 0) + c.claim_amount; });
-  const topProviders = Object.entries(byProvider).sort((a,b) => b[1]-a[1]).slice(0, 8);
+  const rejByProvider = {};
+  rejected.forEach(c => { rejByProvider[c.provider || 'Unknown'] = (rejByProvider[c.provider || 'Unknown'] || 0) + c.claim_amount; });
+  insightList('rejectedByProvider', topEntries(rejByProvider, 8), 'None');
 
-  const providerEl = document.getElementById('rejectedByProvider');
-  providerEl.innerHTML = topProviders.map(([name, amt]) => `
-    <div class="insight-row"><span class="insight-name">${esc(name)}</span><span class="insight-amt">${fmtR(amt)}</span></div>
-  `).join('') || '<div class="insight-row"><span class="insight-name">None</span></div>';
-
-  const byReason = {};
+  const rejByCategory = {};
   rejected.forEach(c => {
-    const reason = (c.pay_code_explanation || 'No reason given').split('.')[0].slice(0, 70);
-    byReason[reason] = (byReason[reason] || 0) + c.claim_amount;
+    const cat = categorize(c.pay_code_explanation);
+    rejByCategory[cat] = (rejByCategory[cat] || 0) + c.claim_amount;
   });
-  const topReasons = Object.entries(byReason).sort((a,b) => b[1]-a[1]).slice(0, 8);
+  insightList('rejectedByReason', topEntries(rejByCategory, 9), 'None');
 
-  const reasonEl = document.getElementById('rejectedByReason');
-  reasonEl.innerHTML = topReasons.map(([reason, amt]) => `
-    <div class="insight-row"><span class="insight-name">${esc(reason)}</span><span class="insight-amt">${fmtR(amt)}</span></div>
-  `).join('') || '<div class="insight-row"><span class="insight-name">None</span></div>';
+  const shortfallByProvider = {};
+  partial.forEach(c => { shortfallByProvider[c.provider || 'Unknown'] = (shortfallByProvider[c.provider || 'Unknown'] || 0) + shortfall(c); });
+  insightList('shortfallByProvider', topEntries(shortfallByProvider, 8), 'None');
+
+  const reimbByProvider = {};
+  reimbursed.forEach(c => { reimbByProvider[c.provider || 'Unknown'] = (reimbByProvider[c.provider || 'Unknown'] || 0) + c.amount_to_you; });
+  insightList('reimbByProvider', topEntries(reimbByProvider, 8), 'None');
 }
 
 function filteredClaims() {

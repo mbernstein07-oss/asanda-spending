@@ -3,6 +3,9 @@
 > Looking for the Cape Town trip planner? See the "Cape Town trip" section
 > near the bottom of this file — `capetown.html` / `capetown.json` are a
 > separate page from the Remitly tracker below.
+>
+> Looking for the medical claims page? See "Medical claims" further down —
+> `claims.html` / `claims.json` are also separate from the Remitly tracker.
 
 This site tracks Remitly transfers to Asanda Mkiva. `index.html` and
 `budget.html` are static pages that read `data.json` — updating means
@@ -128,3 +131,39 @@ published**.
 To verify, open `capetown.html` locally the same way as above and check the
 list and calendar render as expected, then commit and push
 `capetown.json`.
+
+---
+
+## Medical claims
+
+`claims.html` reads `claims.json` — one record per claim line item from
+Momentum's claims history, same "static page + JSON" pattern as the rest of
+the site.
+
+`claims.json` was built by merging two raw Momentum CSV exports (one in a
+wide one-hot-encoded format with hundreds of `detail_<tariff code>` columns,
+one already normalized to two explanation columns) and de-duplicating exact
+matches. Each record has: `date`, `provider` (+ `provider_number` /
+`provider_contact` / `provider_address`), `claim_amount`, `amount_to_you`,
+`amount_to_provider`, `pay_from` (benefit type), `status`, `tariff_code` +
+`tariff_explanation` (what the treatment was), `pay_code` +
+`pay_code_explanation` (why it was paid/rejected the way it was),
+`expected_pay_date`, and `source` (`clean` or `partial`, i.e. which export
+it came from).
+
+To add a new export: parse it into the same record shape and append to the
+JSON array (dedupe against existing records on
+`date+provider+claim_amount+amount_to_you+amount_to_provider+pay_from+status+tariff_code+pay_code`
+before appending, since re-downloaded date ranges tend to overlap). The page
+computes every stat, chart, and the rejected-by-provider/rejected-by-reason
+breakdowns client-side from the raw array — no precomputed aggregates to
+keep in sync.
+
+Note: a claim with `status` starting with `"Rejected"` isn't always money
+owed — some are the scheme fully declining a claim, others are the supplier
+reversing/resubmitting it. Check the reason text before treating the
+rejected total as an out-of-pocket figure.
+
+To verify, open `claims.html` locally the same way as above and confirm the
+stats, table, and filters look right, then commit and push `claims.json`
+(and `claims.html` if it changed).

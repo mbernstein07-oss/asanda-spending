@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asanda Mkiva — Medical Claims</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f9f8;
+      --surface: #ffffff;
+      --border: #e2e8e4;
+      --border-strong: #cfdad3;
+      --text: #1a2e22;
+      --muted: #6b8070;
+      --accent: #2d7a4f;
+      --accent2: #5bb87a;
+      --accent-soft: #e8f0eb;
+      --amber: #b45309;
+      --amber-soft: #fff3e0;
+      --red: #b42318;
+      --red-soft: #fdecea;
+      --blue: #2f5fa3;
+      --blue-soft: #e8eef7;
+      --slate: #5b5b70;
+      --slate-soft: #f1f0f5;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    header {
+      max-width: 1180px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    header h1 { font-size: 1.45rem; font-weight: 700; color: var(--accent); }
+    header p  { font-size: 0.83rem; color: var(--muted); margin-top: 3px; }
+    .back-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    .main { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-size: 1.45rem; font-weight: 700; color: var(--accent); margin-top: 5px; line-height: 1.15; }
+    .stat-value.warn { color: var(--red); }
+    .stat-sub { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+
+    /* Charts */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 800px) { .charts-grid { grid-template-columns: 1fr; } }
+
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .chart-wrap h3 {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .chart-wrap canvas { max-height: 230px; }
+
+    .insight-list { display: flex; flex-direction: column; gap: 8px; }
+    .insight-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .insight-row:last-child { border-bottom: none; }
+    .insight-name { color: var(--text); }
+    .insight-amt { font-weight: 700; color: var(--red); white-space: nowrap; }
+
+    /* Card / filters */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .card h2 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filters input[type=text], .filters select {
+      font-family: inherit;
+      font-size: 0.82rem;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .filters input[type=text] { width: 220px; }
+    .filters input:focus, .filters select:focus {
+      outline: none;
+      border-color: var(--accent2);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(91,184,122,0.16);
+    }
+
+    .btn {
+      padding: 6px 13px;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--accent);
+      font-family: inherit;
+    }
+    .btn:hover { background: #eef3f0; }
+
+    .table-wrap { overflow: auto; max-height: 640px; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    thead th {
+      position: sticky; top: 0;
+      text-align: left;
+      padding: 8px 10px;
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      z-index: 1;
+    }
+    thead th:hover { color: var(--accent); }
+    thead th.sorted { color: var(--accent); }
+    tbody tr:hover { background: #f4f8f5; }
+    tbody td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+    td.desc { max-width: 260px; }
+    td.desc .expl { color: var(--muted); font-size: 0.73rem; margin-top: 1px; }
+    td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    td.date { white-space: nowrap; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-paid     { background: var(--accent-soft); color: var(--accent); }
+    .badge-partial  { background: var(--amber-soft);  color: var(--amber); }
+    .badge-rejected { background: var(--red-soft);    color: var(--red); }
+    .badge-pending  { background: var(--blue-soft);   color: var(--blue); }
+    .badge-other    { background: var(--slate-soft);  color: var(--slate); }
+
+    .source-note { font-size: 0.72rem; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Asanda Mkiva — Medical Claims</h1>
+    <p id="headerSub">Momentum medical scheme claims history</p>
+    <a href="./index.html" class="back-link">← Back to Asanda tracker</a>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <div class="stat-label">Total Claims</div>
+      <div class="stat-value" id="statCount">—</div>
+      <div class="stat-sub" id="statRange">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Billed</div>
+      <div class="stat-value" id="statBilled">—</div>
+      <div class="stat-sub">across all claims</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Paid to Provider</div>
+      <div class="stat-value" id="statToProvider">—</div>
+      <div class="stat-sub">by the scheme, direct</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Paid to You</div>
+      <div class="stat-value" id="statToYou">—</div>
+      <div class="stat-sub">reimbursed to member</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rejected</div>
+      <div class="stat-value warn" id="statRejected">—</div>
+      <div class="stat-sub" id="statRejectedSub">—</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <h3>Billed Amount by Month</h3>
+      <canvas id="monthlyChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <h3>Claims by Status</h3>
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <h3>Rejected R — by Provider (cost-reduction targets)</h3>
+      <div class="insight-list" id="rejectedByProvider"></div>
+    </div>
+    <div class="chart-wrap">
+      <h3>Rejected R — by Reason</h3>
+      <div class="insight-list" id="rejectedByReason"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>All Claims <span id="tableCount" style="font-weight:400;text-transform:none;font-size:0.85rem;color:var(--muted);"></span></h2>
+      <div class="filters">
+        <input type="text" id="searchBox" placeholder="Search provider or treatment…" />
+        <select id="statusFilter"><option value="">All statuses</option></select>
+        <select id="yearFilter"><option value="">All years</option></select>
+        <button class="btn" id="exportBtn">⬇ Export CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-col="date" class="sorted">Date ↓</th>
+            <th data-col="provider">Provider</th>
+            <th data-col="tariff_explanation">Treatment</th>
+            <th data-col="claim_amount">Billed ↕</th>
+            <th data-col="amount_to_provider">To Provider ↕</th>
+            <th data-col="amount_to_you">To You ↕</th>
+            <th data-col="pay_from">Benefit</th>
+            <th data-col="status">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="source-note">
+      Source: two Momentum claims exports (Sep 2023–Jul 2024, and Jul 2024–Aug 2026), merged and de-duplicated — 1,348 unique line items after removing 72 exact duplicates found across the two files. "Rejected" includes claims the scheme fully declined <em>and</em> claims reversed by the supplier (not necessarily an out-of-pocket cost) — check the Status column / reason text before treating a rejected total as money owed.
+    </div>
+  </div>
+
+</div>
+
+<script>
+let claims = [];
+let sortCol = 'date';
+let sortDir = -1;
+let monthlyInst, statusInst;
+
+async function init() {
+  const res = await fetch('./claims.json?_=' + Date.now());
+  claims = await res.json();
+  buildFilterOptions();
+  renderStats();
+  renderInsights();
+  renderTable();
+  try {
+    renderCharts();
+  } catch (err) {
+    console.error('Chart rendering failed (charts skipped, rest of the page is unaffected):', err);
+  }
+}
+
+function buildFilterOptions() {
+  const statuses = [...new Set(claims.map(c => c.status).filter(Boolean))].sort();
+  const statusSel = document.getElementById('statusFilter');
+  statuses.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    statusSel.appendChild(opt);
+  });
+
+  const years = [...new Set(claims.map(c => c.date.slice(0,4)))].sort().reverse();
+  const yearSel = document.getElementById('yearFilter');
+  years.forEach(y => {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    yearSel.appendChild(opt);
+  });
+}
+
+function fmtR(n) {
+  return 'R' + n.toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function badgeClass(status) {
+  if (status.startsWith('Paid')) return 'badge-paid';
+  if (status.startsWith('Partial')) return 'badge-partial';
+  if (status.startsWith('Rejected')) return 'badge-rejected';
+  if (status.startsWith('Pending')) return 'badge-pending';
+  return 'badge-other';
+}
+
+function isRejected(c) { return c.status.startsWith('Rejected'); }
+
+function renderStats() {
+  const count = claims.length;
+  const billed = claims.reduce((s,c) => s + c.claim_amount, 0);
+  const toProvider = claims.reduce((s,c) => s + c.amount_to_provider, 0);
+  const toYou = claims.reduce((s,c) => s + c.amount_to_you, 0);
+  const rejected = claims.filter(isRejected);
+  const rejectedAmt = rejected.reduce((s,c) => s + c.claim_amount, 0);
+
+  const dates = claims.map(c => c.date).sort();
+
+  document.getElementById('statCount').textContent = count.toLocaleString();
+  document.getElementById('statRange').textContent = `${dates[0]} → ${dates[dates.length-1]}`;
+  document.getElementById('statBilled').textContent = fmtR(billed);
+  document.getElementById('statToProvider').textContent = fmtR(toProvider);
+  document.getElementById('statToYou').textContent = fmtR(toYou);
+  document.getElementById('statRejected').textContent = fmtR(rejectedAmt);
+  document.getElementById('statRejectedSub').textContent = `${rejected.length} claims (${(rejected.length/count*100).toFixed(0)}%)`;
+}
+
+function renderCharts() {
+  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Monthly billed totals
+  const monthMap = {};
+  claims.forEach(c => {
+    const m = c.date.slice(0,7);
+    monthMap[m] = (monthMap[m] || 0) + c.claim_amount;
+  });
+  const months = Object.keys(monthMap).sort();
+  const labels = months.map(m => { const [y,mo] = m.split('-'); return `${MONTH_NAMES[+mo-1]} '${y.slice(2)}`; });
+  const vals = months.map(m => +monthMap[m].toFixed(2));
+
+  if (monthlyInst) monthlyInst.destroy();
+  monthlyInst = new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Billed', data: vals, backgroundColor: '#5bb87a' }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + fmtR(ctx.parsed.y) } } },
+      scales: {
+        x: { ticks: { maxRotation: 60, autoSkip: true, maxTicksLimit: 20 } },
+        y: { ticks: { callback: v => 'R' + v.toLocaleString() } }
+      }
+    }
+  });
+
+  // Status breakdown
+  const statusCounts = {};
+  claims.forEach(c => { statusCounts[c.status || 'Unknown'] = (statusCounts[c.status || 'Unknown'] || 0) + 1; });
+  const statusLabels = Object.keys(statusCounts);
+  const statusVals = statusLabels.map(s => statusCounts[s]);
+  const statusColors = statusLabels.map(s => {
+    if (s.startsWith('Paid')) return '#2d7a4f';
+    if (s.startsWith('Partial')) return '#b45309';
+    if (s.startsWith('Rejected')) return '#b42318';
+    if (s.startsWith('Pending')) return '#2f5fa3';
+    return '#5b5b70';
+  });
+
+  if (statusInst) statusInst.destroy();
+  statusInst = new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: { labels: statusLabels, datasets: [{ data: statusVals, backgroundColor: statusColors }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10.5 } } } }
+    }
+  });
+}
+
+function renderInsights() {
+  const rejected = claims.filter(isRejected);
+
+  const byProvider = {};
+  rejected.forEach(c => { byProvider[c.provider || 'Unknown'] = (byProvider[c.provider || 'Unknown'] || 0) + c.claim_amount; });
+  const topProviders = Object.entries(byProvider).sort((a,b) => b[1]-a[1]).slice(0, 8);
+
+  const providerEl = document.getElementById('rejectedByProvider');
+  providerEl.innerHTML = topProviders.map(([name, amt]) => `
+    <div class="insight-row"><span class="insight-name">${esc(name)}</span><span class="insight-amt">${fmtR(amt)}</span></div>
+  `).join('') || '<div class="insight-row"><span class="insight-name">None</span></div>';
+
+  const byReason = {};
+  rejected.forEach(c => {
+    const reason = (c.pay_code_explanation || 'No reason given').split('.')[0].slice(0, 70);
+    byReason[reason] = (byReason[reason] || 0) + c.claim_amount;
+  });
+  const topReasons = Object.entries(byReason).sort((a,b) => b[1]-a[1]).slice(0, 8);
+
+  const reasonEl = document.getElementById('rejectedByReason');
+  reasonEl.innerHTML = topReasons.map(([reason, amt]) => `
+    <div class="insight-row"><span class="insight-name">${esc(reason)}</span><span class="insight-amt">${fmtR(amt)}</span></div>
+  `).join('') || '<div class="insight-row"><span class="insight-name">None</span></div>';
+}
+
+function filteredClaims() {
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  const year = document.getElementById('yearFilter').value;
+
+  return claims.filter(c => {
+    if (status && c.status !== status) return false;
+    if (year && !c.date.startsWith(year)) return false;
+    if (q) {
+      const hay = (c.provider + ' ' + c.tariff_explanation + ' ' + c.pay_code_explanation).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderTable() {
+  const rows = filteredClaims().sort((a,b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'number') return (av - bv) * sortDir;
+    return String(av).localeCompare(String(bv)) * sortDir;
+  });
+
+  document.getElementById('tableCount').textContent = `(${rows.length.toLocaleString()})`;
+
+  const tbody = document.getElementById('tableBody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px">No claims match.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(c => `
+    <tr>
+      <td class="date">${c.date}</td>
+      <td>${esc(c.provider || '—')}</td>
+      <td class="desc">${esc(c.tariff_explanation || '—')}${c.pay_code_explanation ? `<div class="expl">${esc(c.pay_code_explanation.slice(0,90))}</div>` : ''}</td>
+      <td class="num">${fmtR(c.claim_amount)}</td>
+      <td class="num">${fmtR(c.amount_to_provider)}</td>
+      <td class="num">${fmtR(c.amount_to_you)}</td>
+      <td>${esc(c.pay_from || '—')}</td>
+      <td><span class="badge ${badgeClass(c.status)}">${esc(c.status || 'Unknown')}</span></td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) sortDir *= -1;
+    else { sortCol = col; sortDir = ['claim_amount','amount_to_provider','amount_to_you'].includes(col) ? -1 : 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    renderTable();
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input', renderTable);
+document.getElementById('statusFilter').addEventListener('change', renderTable);
+document.getElementById('yearFilter').addEventListener('change', renderTable);
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const rows = filteredClaims();
+  const lines = [
+    'Date,Provider,Treatment,Billed,ToProvider,ToYou,Benefit,Status',
+    ...rows.map(c => [
+      c.date,
+      `"${(c.provider||'').replace(/"/g,'""')}"`,
+      `"${(c.tariff_explanation||'').replace(/"/g,'""')}"`,
+      c.claim_amount.toFixed(2),
+      c.amount_to_provider.toFixed(2),
+      c.amount_to_you.toFixed(2),
+      `"${(c.pay_from||'').replace(/"/g,'""')}"`,
+      `"${(c.status||'').replace(/"/g,'""')}"`,
+    ].join(','))
+  ];
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv' }));
+  a.download = 'asanda-claims-export.csv';
+  a.click();
+});
+
+init();
+</script>
+</body>
+</html>

@@ -239,6 +239,18 @@
     </div>
   </div>
 
+  <div class="card" id="litigationCard" style="border-left:3px solid var(--red);background:var(--red-soft);">
+    <h2 style="margin-bottom:8px;color:var(--red);">⚖ Active litigation — Case No. 629/26</h2>
+    <div style="font-size:0.84rem;line-height:1.65;color:var(--text);">
+      Life Kingsbury Hospital is suing Asanda for <strong>R37,486.94</strong> — that shortfall traces to exactly
+      one claim below (17 Sep 2024, "Surgically Implanted Prosthesis," Momentum capped R93,486.94 to R56,000).
+      Attorney: Marcell Fourie, VDMA Law. A separate, related exposure — Dr Martin Forlee Inc's ~R83.7K unpaid
+      shortfall from two earlier procedures in the same treatment course — hasn't gone to litigation but shows
+      the same pattern. Details on both are in the Cape Town tracker's Legal Case item. Rows involved are marked
+      <span class="badge badge-rejected" style="margin:0 2px;">⚖ case ref</span> below and filterable.
+    </div>
+  </div>
+
   <div class="stats-row" id="statsRow">
     <div class="stat-card">
       <div class="stat-label">Total Claims</div>
@@ -312,6 +324,9 @@
         <input type="text" id="searchBox" placeholder="Search provider or treatment…" />
         <select id="statusFilter"><option value="">All statuses</option></select>
         <select id="yearFilter"><option value="">All years</option></select>
+        <label style="display:flex;align-items:center;gap:5px;font-size:0.8rem;color:var(--muted);cursor:pointer;">
+          <input type="checkbox" id="caseOnlyFilter" /> ⚖ Case-related only
+        </label>
         <button class="btn" id="exportBtn">⬇ Export CSV</button>
       </div>
     </div>
@@ -525,10 +540,12 @@ function filteredClaims() {
   const q = document.getElementById('searchBox').value.trim().toLowerCase();
   const status = document.getElementById('statusFilter').value;
   const year = document.getElementById('yearFilter').value;
+  const caseOnly = document.getElementById('caseOnlyFilter').checked;
 
   return claims.filter(c => {
     if (status && c.status !== status) return false;
     if (year && !c.date.startsWith(year)) return false;
+    if (caseOnly && !c.case_ref) return false;
     if (q) {
       const hay = (c.provider + ' ' + c.tariff_explanation + ' ' + c.pay_code_explanation).toLowerCase();
       if (!hay.includes(q)) return false;
@@ -554,7 +571,7 @@ function renderTable() {
 
   tbody.innerHTML = rows.map(c => `
     <tr>
-      <td class="date">${c.date}</td>
+      <td class="date">${c.date}${c.case_ref ? ` <span class="badge badge-rejected" title="${esc(c.case_ref)}">⚖</span>` : ''}</td>
       <td>${esc(c.provider || '—')}</td>
       <td class="desc">${esc(c.tariff_explanation || '—')}${c.pay_code_explanation ? `<div class="expl">${esc(c.pay_code_explanation.slice(0,90))}</div>` : ''}</td>
       <td class="num">${fmtR(c.claim_amount)}</td>
@@ -585,6 +602,7 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 document.getElementById('searchBox').addEventListener('input', renderTable);
 document.getElementById('statusFilter').addEventListener('change', renderTable);
 document.getElementById('yearFilter').addEventListener('change', renderTable);
+document.getElementById('caseOnlyFilter').addEventListener('change', renderTable);
 
 document.getElementById('exportBtn').addEventListener('click', () => {
   const rows = filteredClaims();

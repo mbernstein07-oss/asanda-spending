@@ -192,6 +192,20 @@
       "notes": "Holding — pick this back up once we have record access."
     },
     {
+      "id": "legal-case",
+      "title": "Legal Case — Kingsbury Hospital",
+      "status": "planning",
+      "summary": "Life Kingsbury Hospital is suing Asanda for R37,486.94, Case No. 629/26.",
+      "details": [
+        "Root cause, confirmed against the claims data: Momentum capped the 'Surgically Implanted Prosthesis' line from Asanda's Sept 17-20, 2024 admission at R56,000 against a R93,486.94 charge — the R37,486.94 gap is exactly what's being sued for. Should have been funded in full as a PMB (CKD-5 / dialysis vascular access), not capped to a plan sub-limit.",
+        "Attorney: Marcell Fourie, VDMA Law (mfourie@vdmalaw.com). Plea due ~20 days from the Aug 26, 2026 declaration.",
+        "Defense angles already raised with VDMA: PMB shortfall (not a refusal to pay), the hospital's own cession of scheme claims under s59(2) Medical Schemes Act, a defective s129 notice (wrong address pleaded, apparent return-to-sender), and a 1-day ward accommodation over-billing",
+        "New finding (Sep 2026): Dr Martin Forlee Inc, the surgeon on that same admission, has ~R83.7K in separate unpaid shortfall plus ~R49.5K paid to Asanda instead of directly to him, from two earlier related procedures (Jul 2 and Aug 16, 2024) in the same treatment course. Same cap pattern, no lawsuit from him yet.",
+        "Drafted (not sent) a follow-up email to Marcell flagging the Forlee pattern — sitting in Gmail drafts, needs review before sending"
+      ],
+      "notes": "Directly tied to the Momentum plan item below — the same plan-cap-instead-of-PMB issue is likely the root cause of multiple line items, not just this one. Worth raising with Momentum directly, not just defending case-by-case in court."
+    },
+    {
       "id": "gofundme",
       "title": "Asanda GoFundMe",
       "status": "holding",
@@ -199,7 +213,8 @@
       "details": [
         "Requires organizing all his medical records",
         "Also gather Clicks pharmacy purchase history / receipts as spending evidence",
-        "Can likely reuse the translated Story once that's done"
+        "Can likely reuse the translated Story once that's done",
+        "Wait on the outcome of the Kingsbury Hospital case (and the possible Forlee exposure) before finalizing the ask amount — the medical-debt story is a real, concrete number now, not an estimate"
       ],
       "notes": "Holding — blocked on Medical Records (record access) same as that item."
     },
@@ -231,7 +246,8 @@
         "The 'Momentum debit account' = HealthSaver — a linked savings account/card, debits at approved providers including pharmacies (Clicks qualifies), min R100/month via debit order, unused balance rolls over",
         "Social worker isn't a standalone benefit — it's bundled into the medical rehabilitation benefit (private nursing, hospice, step-down care), approved case-by-case. Ask directly whether Asanda's situation qualifies",
         "Ask whether his transplant follow-up care is protected as a Prescribed Minimum Benefit regardless of plan option — South African schemes are legally required to cover PMBs on every plan, which could mean the Custom/Incentive choice matters less for his core care and more for day-to-day cash flow",
-        "Also ask about the mental health benefit (covers a defined list of diagnoses — relevant given the therapist visit already planned) and Multiply rewards (discounts for health check participation)"
+        "Also ask about the mental health benefit (covers a defined list of diagnoses — relevant given the therapist visit already planned) and Multiply rewards (discounts for health check participation)",
+        "Now urgent, not hypothetical: this exact PMB-vs-plan-cap issue is the root cause of the active Kingsbury Hospital lawsuit (see Legal Case item) and likely also explains ~R83.7K of Dr Forlee's unpaid claims. Raise it directly, don't just wait for the case to resolve it."
       ],
       "notes": "Researched Aug 2026 from Momentum's public plan pages — confirm current numbers in person, they change year to year."
     },

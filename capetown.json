@@ -235,6 +235,14 @@
       "notes": ""
     },
     {
+      "id": "social-worker",
+      "title": "Find Asanda a Social Worker",
+      "status": "todo",
+      "summary": "Find and connect Asanda with a social worker while in Cape Town.",
+      "details": [],
+      "notes": "Related to the Momentum plan item — Momentum's social worker access is bundled into the medical rehabilitation benefit and approved case-by-case, so worth pursuing both through Momentum and independently (e.g. a hospital or NPO-based social worker) rather than waiting on the scheme alone."
+    },
+    {
       "id": "momentum",
       "title": "Momentum plan",
       "status": "planning",

@@ -206,6 +206,22 @@
       "notes": "Directly tied to the Momentum plan item below — the same plan-cap-instead-of-PMB issue is likely the root cause of multiple line items, not just this one. Worth raising with Momentum directly, not just defending case-by-case in court."
     },
     {
+      "id": "pathcare-dispute",
+      "title": "PathCare Collections — R3,964.50",
+      "status": "planning",
+      "summary": "PathCare (lab bills via Drs Dietrich B E & Partners) sent R3,278.90 of a R3,964.50 balance to an external collection agency. Root cause matches the Kingsbury/Forlee pattern — do not just pay it.",
+      "details": [
+        "19 months of small lab bills (Feb 2025-Aug 2026) rejected as 'Savings Depleted' — but ~R5,192.50 of the underlying rejected tests (Blood Urea, Potassium, Phosphorus, Magnesium, Haemoglobin, Urine Creatinine, AST/ALT, CO2 Combining Power) are textbook Stage 5 CKD/dialysis monitoring tests that should be funded in full under PMB/Chronic Disease List rules, not routed through a day-to-day savings pot",
+        "This is the THIRD independent example of the same Momentum pattern: Kingsbury Hospital (implant), Dr Forlee (vascular surgery), now PathCare (routine labs) — all CKD-5 related costs shunted to plan limits instead of PMB",
+        "The Sept 5, 2026 PathCare email's 7-day payment deadline has already passed",
+        "PathCare statement PDF is password-protected — likely the last 7 digits of Asanda's SA ID number (same convention used on all his prior Momentum/PathCare documents)",
+        "Action 1: contact PathCare (accounts@pathcare.net, Debtors team 0860 100 442, Account G002947554) to dispute the balance as a scheme coverage issue and request a hold on collections activity",
+        "Action 2: dispute the specific rejected tests with Momentum's Chronic Management Team (chronic@momentumhealth.co.za — used successfully before for Asanda's chronic med coverage in 2024), citing PMB/CDL rules for CKD-5",
+        "Action 3: flag this as a third pattern instance to Marcell Fourie at VDMA — strengthens the broader PMB argument already running in the Kingsbury case, even though this specific claim doesn't need a lawyer"
+      ],
+      "notes": "Drafts for all three actions prepared — check Gmail drafts before sending."
+    },
+    {
       "id": "gofundme",
       "title": "Asanda GoFundMe",
       "status": "holding",

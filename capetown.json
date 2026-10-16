@@ -89,7 +89,10 @@
       "title": "Meds Review",
       "status": "todo",
       "summary": "Check all of Asanda's medications to see where costs can be reduced.",
-      "details": [],
+      "details": [
+        "Sep 2026 Momentum rejections: Clicks Promenade Sep 14 — R638.76 (code 292, drug interaction), R179.81 + R26.07 (code 876, duplicate active ingredient within refill period); Medipost Gezina Sep 11 — R345.02 (code 875, dose exceeds recommended daily dosage). R1,189.66 total unpaid",
+        "These are prescribing/dispensing issues, not benefit limits — worth reviewing with his doctor/pharmacist whether he's being double-dispensed (Clicks + Medipost) or the scripts need updating"
+      ],
       "notes": ""
     },
     {
@@ -201,7 +204,10 @@
         "Attorney: Marcell Fourie, VDMA Law (mfourie@vdmalaw.com). Plea due ~20 days from the Aug 26, 2026 declaration.",
         "Defense angles already raised with VDMA: PMB shortfall (not a refusal to pay), the hospital's own cession of scheme claims under s59(2) Medical Schemes Act, a defective s129 notice (wrong address pleaded, apparent return-to-sender), and a 1-day ward accommodation over-billing",
         "New finding (Sep 2026): Dr Martin Forlee Inc, the surgeon on that same admission, has ~R83.7K in separate unpaid shortfall plus ~R49.5K paid to Asanda instead of directly to him, from two earlier related procedures (Jul 2 and Aug 16, 2024) in the same treatment course. Same cap pattern, no lawsuit from him yet.",
-        "Drafted (not sent) a follow-up email to Marcell flagging the Forlee pattern — sitting in Gmail drafts, needs review before sending"
+        "Sent to Marcell: Sep 3 (Forlee pattern), Sep 15 (PathCare pattern). No reply from Marcell since the Aug 26 declaration — plea status unknown",
+        "Oct 16: Dr Khan (nephrologist, same admission) now pursuing R6,341.40 — 4th instance, same 'James Crescent' address error. Draft to Marcell in Gmail drafts (see Dr Khan item)",
+        "Fees: July invoice paid (confirmed Aug 28). August invoice INV4559 (Oct 1) — wired via PNC Oct 7, Hazel has NOT confirmed receipt yet",
+        "Open question to Hazel (Oct 6), unanswered: can the hospital be made to pay Asanda's legal costs?"
       ],
       "notes": "Directly tied to the Momentum plan item below — the same plan-cap-instead-of-PMB issue is likely the root cause of multiple line items, not just this one. Worth raising with Momentum directly, not just defending case-by-case in court."
     },
@@ -217,9 +223,31 @@
         "PathCare statement PDF is password-protected — likely the last 7 digits of Asanda's SA ID number (same convention used on all his prior Momentum/PathCare documents)",
         "Action 1: contact PathCare (accounts@pathcare.net, Debtors team 0860 100 442, Account G002947554) to dispute the balance as a scheme coverage issue and request a hold on collections activity",
         "Action 2: dispute the specific rejected tests with Momentum's Chronic Management Team (chronic@momentumhealth.co.za — used successfully before for Asanda's chronic med coverage in 2024), citing PMB/CDL rules for CKD-5",
-        "Action 3: flag this as a third pattern instance to Marcell Fourie at VDMA — strengthens the broader PMB argument already running in the Kingsbury case, even though this specific claim doesn't need a lawyer"
+        "Action 3: flag this as a third pattern instance to Marcell Fourie at VDMA — strengthens the broader PMB argument already running in the Kingsbury case, even though this specific claim doesn't need a lawyer",
+        "Sep 17: PathCare (Lee Fielies) put account on a 21-day hold — EXPIRED ~Oct 8",
+        "Sep 21: Momentum renalcare (Landezwa Kakancu, ref 756732356) said all 2025-26 claims paid and rejected tariffs added to the Chronic Haemodialysis authorisation for reprocessing; asked for a detailed list of anything still unpaid",
+        "Oct 2: PathCare — no payment from Momentum yet. Oct 12: PathCare sent highlighted list of unpaid codes for Momentum (BulkGuarantorInvoicesReprint PDF)",
+        "Oct 15: forwarded codes to renalcare@momentum.co.za (auto-ack only so far); asked PathCare to confirm collections (e.g. bank account holds) are paused. Oct 16: PathCare replied 'noted' — NOT an explicit confirmation",
+        "Next: chase Momentum for confirmation of reprocessing; get explicit written confirmation from PathCare that collection is on hold"
       ],
-      "notes": "Drafts for all three actions prepared — check Gmail drafts before sending."
+      "notes": "Actions 1-3 done (dispute sent Sep 15, Momentum queried Sep 15, Marcell flagged Sep 15). Waiting on Momentum to reprocess the PathCare codes."
+    },
+    {
+      "id": "khan-collections",
+      "title": "Dr Khan Collections — R6,341.40",
+      "status": "planning",
+      "summary": "Dr F Khan Inc (nephrologist at Life Kingsbury, billed via AxialMed, acct FKH3508) sent a 120+ day overdue statement on Oct 16, 2026 threatening handover to debt recovery. Same Sept 17-20, 2024 Kingsbury admission as the lawsuit — fourth instance of the Momentum PMB pattern.",
+      "details": [
+        "4 in-hospital visits, auth 143189560, ICD-10 N18.5 + I10: 17 Sep (0175 R2,199.30 + 0145 R485.40), 18/19/20 Sep (0109 R1,218.90 each) = R6,341.40",
+        "Statement shows Momentum receipts of R0.00 — misleading. claims.json shows Momentum paid at scheme rate (~1/3 of Dr Khan's fees) DIRECTLY TO ASANDA: R2,114.00 (expected pay dates Oct 18 & Nov 15, 2024). Asanda never passed it on.",
+        "So: R2,114.00 is plainly owed (Momentum's money for her services). R4,227.40 is the fee-vs-scheme-rate gap — arguable as PMB only if the admission was an emergency / involuntary non-network use (the hospital's own records show the referral as emergency).",
+        "Statement has the same wrong address as the lawsuit ('Z71 JAMES CESCENT' vs actual Z71 Jama Crescent) — supports that the error came from the admission form",
+        "Prescription: ~3 years from service, so collectable until ~Sep 2027",
+        "Drafted (Oct 16, in Gmail drafts, NOT sent): (1) AxialMed — offer to pay R2,114, hold collection on R4,227.40, ask Dr Khan to accept scheme rate, fix address; (2) Momentum renalcare (Landezwa) — reprocess the 5 lines as PMB, explain if non-DSP, confirm whether the whole admission was processed as PMB; (3) Marcell — flag 4th instance + address point, ask whether paying Khan or approaching Momentum on the whole admission cuts across the defence",
+        "Suggested order: send Marcell first, then Momentum + AxialMed once he doesn't object",
+        "Pay to: Dr F Khan INC, Investec 10012409542 (cheque), branch 580105, ref FKH3508 — confirm details with AxialMed (021 406 9911) before paying"
+      ],
+      "notes": "Dr Khan also billed Aug 5-6 and Aug 14-16, 2024 visits (same scheme-rate-paid-to-member pattern, ~R4,900 to Asanda) — not on this statement, so presumably settled or written off. Worth asking Asanda."
     },
     {
       "id": "gofundme",
@@ -271,7 +299,9 @@
         "Social worker isn't a standalone benefit — it's bundled into the medical rehabilitation benefit (private nursing, hospice, step-down care), approved case-by-case. Ask directly whether Asanda's situation qualifies",
         "Ask whether his transplant follow-up care is protected as a Prescribed Minimum Benefit regardless of plan option — South African schemes are legally required to cover PMBs on every plan, which could mean the Custom/Incentive choice matters less for his core care and more for day-to-day cash flow",
         "Also ask about the mental health benefit (covers a defined list of diagnoses — relevant given the therapist visit already planned) and Multiply rewards (discounts for health check participation)",
-        "Now urgent, not hypothetical: this exact PMB-vs-plan-cap issue is the root cause of the active Kingsbury Hospital lawsuit (see Legal Case item) and likely also explains ~R83.7K of Dr Forlee's unpaid claims. Raise it directly, don't just wait for the case to resolve it."
+        "Now urgent, not hypothetical: this exact PMB-vs-plan-cap issue is the root cause of the active Kingsbury Hospital lawsuit (see Legal Case item) and likely also explains ~R83.7K of Dr Forlee's unpaid claims. Raise it directly, don't just wait for the case to resolve it.",
+        "Sep 2026 win: renalcare (renalcare@momentum.co.za, Landezwa Kakancu, 0860 11 78 59) agreed to add previously rejected tariffs to the Chronic Haemodialysis authorisation and reprocess — this is the right contact for PMB disputes, not chronic@",
+        "Pending with renalcare: PathCare unpaid codes (sent Oct 15); Dr Khan lines + whole Kingsbury admission PMB review (drafted Oct 16)"
       ],
       "notes": "Researched Aug 2026 from Momentum's public plan pages — confirm current numbers in person, they change year to year."
     },

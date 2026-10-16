@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Asanda Mkiva — Remitly Transfers</title>
+  <title>Asanda Mkiva — Transfers</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -235,7 +235,7 @@
 <header>
   <div>
     <h1>Asanda Mkiva</h1>
-    <p id="headerSub">Remitly transfer history · USD → ZAR</p>
+    <p id="headerSub">Remitly + Xoom transfer history · USD → ZAR</p>
     <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px;">
       <a href="./budget.html" style="font-size:0.8rem;font-weight:600;color:var(--accent);text-decoration:none;">📋 Monthly budget breakdown →</a>
       <a href="./capetown.html" style="font-size:0.8rem;font-weight:600;color:var(--accent);text-decoration:none;">🇿🇦 Cape Town trip planning →</a>
@@ -286,7 +286,7 @@
     <div class="stat-card">
       <div class="stat-label">Total Fees</div>
       <div class="stat-value" id="statFees">—</div>
-      <div class="stat-sub">Remitly fees paid</div>
+      <div class="stat-sub">Remitly + Xoom fees paid</div>
     </div>
   </div>
 
@@ -425,8 +425,8 @@ function renderAll() {
   document.getElementById('btnUSD').classList.toggle('active', !showZAR);
   document.getElementById('btnZAR').classList.toggle('active', showZAR);
   document.getElementById('headerSub').textContent = showZAR
-    ? 'Remitly transfer history · ZAR view'
-    : 'Remitly transfer history · USD → ZAR';
+    ? 'Remitly + Xoom transfer history · ZAR view'
+    : 'Remitly + Xoom transfer history · USD → ZAR';
 
   const allBtn = document.getElementById('allYearsBtn');
   const prevBtn = document.getElementById('prevYear');
@@ -830,7 +830,7 @@ function renderTable(rows) {
       <td class="zar-cell">${col2}</td>
       <td class="rate-cell">R${rate}</td>
       <td class="rate-cell">${feeDisp}</td>
-      <td class="rate-cell" style="font-family:monospace;font-size:0.74rem">${t.ref}</td>
+      <td class="rate-cell" style="font-family:monospace;font-size:0.74rem">${t.ref}${t.via ? ` <span style="font-family:inherit;opacity:0.7">(${t.via})</span>` : ''}</td>
     </tr>`;
   }).join('');
 }

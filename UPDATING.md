@@ -47,6 +47,16 @@ receipt table:
   `1617.0`, strip the comma).
 - **Submitted** date — convert to `YYYY-MM-DD` for the `date` field.
 
+### Xoom transfers too
+
+Some transfers go through Xoom (PayPal) instead of Remitly — e.g. the
+Aug 24, 2026 medical aid payment. Search `from:xoom.com after:YYYY/MM/DD`
+as well. Xoom sends a "Xoom transaction receipt XXXXXXXX" email (send
+amount, transaction fee, recipient receives) and a "Transaction XXXXXXXX is
+complete" email (equivalent of Remitly's "Delivered"). Use the transaction
+number as `ref` and add `"via": "Xoom"` so the table labels it. Only add
+transfers to Asanda Mkiva.
+
 ## 3. Add a record to data.json
 
 Each entry follows this shape:

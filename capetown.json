@@ -46,13 +46,14 @@
       "id": "car",
       "kind": "car",
       "label": "Car",
-      "headline": "Avis · VW Polo Vivo",
+      "headline": "Avis · Toyota Corolla Quest or similar",
       "lines": [
-        "Pick up Sun Nov 8 — Cape Town Intl (CPT)",
-        "Drop off Sat Nov 21",
-        "Manual · unlimited km"
+        "Pick up Sun Nov 8, 12:00 PM — Cape Town Intl (CPT)",
+        "Drop off Sat Nov 21, 8:00 PM — CPT (flight departs 8:50 PM — move earlier)",
+        "Automatic · unlimited km",
+        "Est. $401.21 — $262.34 prepaid, ~$138.87 due at counter"
       ],
-      "ref": "Avis #22695383US4"
+      "ref": "Avis #22695383US4 · modified Oct 12"
     },
     {
       "id": "bags",
@@ -146,9 +147,10 @@
         "Karl",
         "Chris Campbell Memorial Field",
         "Maji",
-        "Asanda's transplant coordinator",
+        "Asanda's transplant coordinator — Louise Human, Netcare (Louise.Human@netcare.co.za). Offered to visit (Oct 7); no reply since Jun 26 — see Transplant List item",
         "Asanda's doctor",
-        "Asanda's therapist"
+        "Asanda's therapist",
+        "Marcell Fourie, VDMA Law (Kingsbury case attorney) — Matt offered to meet in person (Oct 16), awaiting reply"
       ],
       "notes": ""
     },
@@ -156,12 +158,13 @@
       "id": "car",
       "title": "Car",
       "status": "planning",
-      "summary": "Avis #22695383US4 — pick up Nov 8 at CPT, drop off Nov 21.",
+      "summary": "Avis #22695383US4 — pick up Nov 8 (12:00 PM) at CPT, drop off Nov 21. Modified Oct 12: now a Toyota Corolla Quest or similar, automatic.",
       "details": [
         "At the counter: ask for the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to lift third-party liability above the standard ~R6,000,000 cap",
         "Can't be pre-booked — international rate, so it's added at pickup only",
         "Flight lands Nov 7 at 6 PM but pickup is Nov 8 — need a ride from CPT to Gardens on arrival night",
-        "Return flight is Nov 21 at 8:50 PM — confirm the drop-off time leaves enough margin"
+        "⚠ Drop-off is booked for 8:00 PM Nov 21 but UA2222 departs 8:50 PM — far too tight for an international flight. Move drop-off to ~5:00–5:30 PM (Avis CPT is open 24 hrs, +27 21 927 8800)",
+        "Oct 12 modification: VW Polo Vivo manual → Toyota Corolla Quest or similar, automatic. Est. total $401.21 ($262.34 prepaid, ~$138.87 due at pickup) — waiver add-on not included"
       ],
       "notes": "Waiver detail confirmed by Avis reservations, Aug 17 2026."
     },
@@ -195,6 +198,21 @@
       "notes": "Holding — pick this back up once we have record access."
     },
     {
+      "id": "transplant",
+      "title": "Transplant List — Netcare",
+      "status": "planning",
+      "summary": "Get Asanda's August waiting-list bloodwork done so he's officially on the transplant list. Louise Human (Netcare) hasn't replied since June.",
+      "details": [
+        "Feb 3: Louise chasing a dental clearance letter (Dr Bernard, GSH) and a new motivation letter (Dr Stead) for the medical aid",
+        "Apr 7: radiology booked by Louise",
+        "May 26: Louise — 'He is listed, now it is waiting. We will do bloods again in August for the waiting list'",
+        "Jun 26: Louise — 'No officially on the list' (read as: not officially on the list yet)",
+        "Matt followed up Jul 27, Aug 5, Aug 11 and Oct 7 (Oct 7 also offered to visit in November) — no reply. The August bloods appear not to have happened",
+        "Next: try a phone call or have Asanda go in person; raise it in person during the Nov 7–21 trip if still stuck"
+      ],
+      "notes": "Bloodwork is likely billed through PathCare — keep the PathCare dispute (and Momentum's renal care team) in the loop so the next round isn't rejected the same way."
+    },
+    {
       "id": "legal-case",
       "title": "Legal Case — Kingsbury Hospital",
       "status": "planning",
@@ -205,9 +223,10 @@
         "Defense angles already raised with VDMA: PMB shortfall (not a refusal to pay), the hospital's own cession of scheme claims under s59(2) Medical Schemes Act, a defective s129 notice (wrong address pleaded, apparent return-to-sender), and a 1-day ward accommodation over-billing",
         "New finding (Sep 2026): Dr Martin Forlee Inc, the surgeon on that same admission, has ~R83.7K in separate unpaid shortfall plus ~R49.5K paid to Asanda instead of directly to him, from two earlier related procedures (Jul 2 and Aug 16, 2024) in the same treatment course. Same cap pattern, no lawsuit from him yet.",
         "Sent to Marcell: Sep 3 (Forlee pattern), Sep 15 (PathCare pattern). No reply from Marcell since the Aug 26 declaration — plea status unknown",
-        "Oct 16: Dr Khan (nephrologist, same admission) now pursuing R6,341.40 — 4th instance, same 'James Crescent' address error. Draft to Marcell in Gmail drafts (see Dr Khan item)",
-        "Fees: July invoice paid (confirmed Aug 28). August invoice INV4559 (Oct 1) — wired via PNC Oct 7, Hazel has NOT confirmed receipt yet",
-        "Open question to Hazel (Oct 6), unanswered: can the hospital be made to pay Asanda's legal costs?"
+        "Oct 16: Dr Khan (nephrologist, same admission) now pursuing R6,341.40 — 4th instance, same 'James Crescent' address error. Short update sent to Marcell Oct 16 asking whether to pay the R2,114 and whether to approach Momentum (see Dr Khan item)",
+        "Fees: July invoice paid via Sage Financial (Ryan Kraus, Aug 24) — VDMA confirmed receipt in trust account Aug 28. August invoice INV4559 (Oct 1) — Hazel confirmed same banking details Oct 6, wired via PNC Oct 7; receipt NOT yet confirmed (Matt re-asked Marcell Oct 16)",
+        "Open question to Hazel (Oct 6), unanswered: can the hospital be made to pay Asanda's legal costs?",
+        "Oct 16: Matt also wrote Marcell directly — asked about the wire, and offered to meet in person while in Cape Town Nov 7–21"
       ],
       "notes": "Directly tied to the Momentum plan item below — the same plan-cap-instead-of-PMB issue is likely the root cause of multiple line items, not just this one. Worth raising with Momentum directly, not just defending case-by-case in court."
     },
@@ -302,7 +321,8 @@
         "Also ask about the mental health benefit (covers a defined list of diagnoses — relevant given the therapist visit already planned) and Multiply rewards (discounts for health check participation)",
         "Now urgent, not hypothetical: this exact PMB-vs-plan-cap issue is the root cause of the active Kingsbury Hospital lawsuit (see Legal Case item) and likely also explains ~R83.7K of Dr Forlee's unpaid claims. Raise it directly, don't just wait for the case to resolve it.",
         "Sep 21, 2026: renalcare (renalcare@momentum.co.za, Landezwa Kakancu, 0860 11 78 59) SAID previously rejected tariffs were added to the Chronic Haemodialysis authorisation and submitted for reprocessing — but as of Oct 16 nothing shows PathCare has been paid (PathCare confirmed no payment Oct 2). Promising contact, not yet a proven win",
-        "Pending with renalcare: confirmation that PathCare unpaid codes (sent Oct 15, auto-ack only) are reprocessed AND paid; Dr Khan lines + whole Kingsbury admission PMB review (drafted Oct 16, not sent)"
+        "Pending with renalcare: confirmation that PathCare unpaid codes (sent Oct 15, auto-ack only) are reprocessed AND paid; Dr Khan lines + whole Kingsbury admission PMB review (drafted Oct 16, not sent)",
+        "claims.json (Medical Claims page) covers Sep 2023–Aug 31, 2026. Since then (from forwarded notifications): dialysis (Mr TS Jugdeo) Sep 23 + Oct 7, R2,486 each, paid in full from Major Medical; pharmacy rejections Sep 11/14 (see Meds Review). Pull a fresh Momentum export to bring the page current"
       ],
       "notes": "Researched Aug 2026 from Momentum's public plan pages — confirm current numbers in person, they change year to year."
     },
@@ -330,12 +350,12 @@
     { "date": "2026-11-06", "title": "UA1122 departs EWR 8:35 PM", "type": "travel", "notes": "Overnight to Cape Town" },
     { "date": "2026-11-07", "title": "Land CPT 6:00 PM", "type": "travel", "notes": "No car until tomorrow — arrange a ride to Gardens" },
     { "date": "2026-11-07", "title": "Airbnb check-in (after 3 PM)", "type": "stay", "notes": "Secret Sunsets in Gardens · host Gary" },
-    { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "Ask for the Windscreen / Tyre / 3rd Party Damage Waiver" },
+    { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "12:00 PM. Ask for the Windscreen / Tyre / 3rd Party Damage Waiver" },
     { "date": "2026-11-08", "title": "V&A Waterfront live music", "type": "fun", "notes": "Free" },
     { "date": "2026-11-11", "title": "Jill Scott — GrandWest", "type": "fun", "notes": "Grand Arena, 20:00" },
     { "date": "2026-11-14", "title": "Lipizzaner horse show — Paarl", "type": "fun", "notes": "Paarl Farms, 11:30 AM–1 PM — pair with a wine tour" },
     { "date": "2026-11-21", "title": "Cape Town Concert Series", "type": "fun", "notes": "Baxter Concert Hall" },
-    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Leave margin for the 8:50 PM flight" },
+    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Booked for 8:00 PM — too tight for the 8:50 PM flight, move to ~5:00–5:30 PM" },
     { "date": "2026-11-21", "title": "UA2222 departs CPT 8:50 PM", "type": "travel", "notes": "Arrives EWR Nov 22, 5:50 AM" }
   ]
 }

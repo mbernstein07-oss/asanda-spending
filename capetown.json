@@ -156,7 +156,7 @@
         "FRIENDS — Maji",
         "FRIENDS — Chris Campbell Memorial Field — visit with Sipho (see Connect with Sipho)",
         "FRIENDS — Kwakhanya (hopefully — find once there)",
-        "FRIENDS — Dr Abi Blumenthal — Dad's 2013 seder connection, Chris Campbell wants Matt to reconnect (see her item)",
+        "FRIENDS — Dad's SA Jewish community contact (man, 2012–13) — Chris Campbell wants Matt to reconnect; name TBD (see item)",
         "MAYBE — Volunteering organization for Asanda, depending on how conversations with him go",
         "MAYBE — Xhosa speaker to review the translated Story"
       ],
@@ -206,17 +206,17 @@
       "notes": "Do this once there."
     },
     {
-      "id": "abi-blumenthal",
-      "title": "Reconnect with Dr Abi Blumenthal",
+      "id": "sa-jewish-contact",
+      "title": "Find Dad's SA Jewish community contact",
       "status": "todo",
-      "summary": "Rekindle the connection with Abi Blumenthal, the young doctor Dad met at the Cape Town synagogue Passover seder in March 2013 — Chris Campbell asked Matt to reconnect.",
+      "summary": "Track down the man from the SA Jewish community that Dad (Len) introduced us to on a 2012–13 visit — Chris Campbell asked Matt to rekindle the relationship. Identity not yet confirmed.",
       "details": [
-        "Met Len & Ellan at the synagogue seder, Mon Mar 25 2013. At the time she worked daily at a clinic in Khayelitsha (patient self-care education); was there with her husband and baby",
-        "Last known email: abi.blumenthal@googlemail.com (2013 — may be stale)",
-        "Matt emailed her Apr 2–10 2013 ('Soccer Field in Khayelitsha') about first aid training for the CTC field (Level 1, managers Level 3). She asked about field hours; thread ended Apr 10 2013 after Matt sent his brainstorm doc",
-        "Next: try the old email; if it bounces, ask Dad which synagogue hosted the seder, and search by name (likely a medical practitioner — check the HPCSA register / LinkedIn)"
+        "Believed to be a man. Gmail search (Nov 5) didn't surface him by name — ask Dad directly: name, where they met, which synagogue",
+        "The visit in Gmail is Mar 15–31 2013 (parents in Cape Town + Joburg; Passover seder at a Cape Town synagogue on Mon Mar 25)",
+        "Only Jewish-community contact found from that trip: Dr Abi Blumenthal (woman, met at the seder; abi.blumenthal@googlemail.com; Matt emailed her Apr 2013 about first aid at the field). Possibly her husband, who was with her at the seder?",
+        "Other 2013 contact: Daniela Dotan (caterer, Daniela's Deliciously Decadent) — not a match"
       ],
-      "notes": "Found via Gmail search Nov 5 2026. Related: Daniela Dotan (Daniela's Deliciously Decadent) catered the family's Mar 24 2013 dinner and offered to sponsor CTC charity events — another 2013 contact if useful."
+      "notes": "Open — waiting on a name from Dad."
     },
     {
       "id": "medical-records",

@@ -163,7 +163,7 @@
         "At the counter: ask for the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to lift third-party liability above the standard ~R6,000,000 cap",
         "Can't be pre-booked — international rate, so it's added at pickup only",
         "Flight lands Nov 7 at 6 PM but pickup is Nov 8 — need a ride from CPT to Gardens on arrival night",
-        "⚠ Drop-off is booked for 8:00 PM Nov 21 but UA2222 departs 8:50 PM — far too tight for an international flight. Move drop-off to ~5:00–5:30 PM (Avis CPT is open 24 hrs, +27 21 927 8800)",
+        "Drop-off booked for 8:00 PM Nov 21 on purpose (buffer for delays) — just return it early, ~5:00–5:30 PM, before UA2222 at 8:50 PM",
         "Oct 12 modification: VW Polo Vivo manual → Toyota Corolla Quest or similar, automatic. Est. total $401.21 ($262.34 prepaid, ~$138.87 due at pickup) — waiver add-on not included"
       ],
       "notes": "Waiver detail confirmed by Avis reservations, Aug 17 2026."
@@ -355,7 +355,7 @@
     { "date": "2026-11-11", "title": "Jill Scott — GrandWest", "type": "fun", "notes": "Grand Arena, 20:00" },
     { "date": "2026-11-14", "title": "Lipizzaner horse show — Paarl", "type": "fun", "notes": "Paarl Farms, 11:30 AM–1 PM — pair with a wine tour" },
     { "date": "2026-11-21", "title": "Cape Town Concert Series", "type": "fun", "notes": "Baxter Concert Hall" },
-    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Booked for 8:00 PM — too tight for the 8:50 PM flight, move to ~5:00–5:30 PM" },
+    { "date": "2026-11-21", "title": "Avis drop-off", "type": "car", "notes": "Booked 8:00 PM as a buffer — return early (~5:00–5:30 PM) for the 8:50 PM flight" },
     { "date": "2026-11-21", "title": "UA2222 departs CPT 8:50 PM", "type": "travel", "notes": "Arrives EWR Nov 22, 5:50 AM" }
   ]
 }

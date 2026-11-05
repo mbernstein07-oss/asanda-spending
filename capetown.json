@@ -172,20 +172,28 @@
       "id": "kwakhanya",
       "title": "Kwakhanya",
       "status": "holding",
-      "summary": "Message Kwakhanya Dudumashe before traveling, to reconnect.",
+      "summary": "Find and reconnect with Kwakhanya Dudumashe while in Cape Town.",
       "details": [
         "dudumashekwakhanya89@gmail.com",
         "Last contact: May 2025"
       ],
-      "notes": "Holding — draft the message closer to the trip."
+      "notes": "Holding — Matt will look for Kwakhanya once he's there; no message before the trip."
     },
     {
       "id": "campbell-ryan",
       "title": "Campbell / Ryan",
-      "status": "holding",
+      "status": "done",
       "summary": "Write to Chris Campbell and Ryan McGonigle before traveling.",
       "details": [],
-      "notes": "Holding — draft the message closer to the trip."
+      "notes": "Done — Matt emailed both before the trip (Nov 2026)."
+    },
+    {
+      "id": "sipho",
+      "title": "Connect with Sipho",
+      "status": "todo",
+      "summary": "Connect with Sipho while in Cape Town.",
+      "details": [],
+      "notes": "Do this once there."
     },
     {
       "id": "medical-records",

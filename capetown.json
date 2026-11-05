@@ -211,6 +211,22 @@
       "notes": "Do this once there."
     },
     {
+      "id": "third-space",
+      "title": "Find a 3rd Space for Asanda & Matt",
+      "status": "todo",
+      "summary": "A regular place for Matt and Asanda to hang out that isn't either home — ideally near the N2 / M5 so Matt can avoid driving into Khayelitsha proper.",
+      "details": [
+        "Chris Campbell Memorial Field — the obvious one; check how deep into Khayelitsha it is vs the highway",
+        "Muizenberg (Surfer's Corner) — beach, cafés, ~20 min for Asanda along Baden Powell Dr, M5 for Matt; pairs with the surf lesson",
+        "Claremont / Cavendish Square — malls + cafés off the M5, central, easy Uber or train for Asanda",
+        "Kirstenbosch Gardens — calm, beautiful, good for long talks / the Story recording; further for Asanda",
+        "V&A Waterfront — close to Gardens for Matt, busy and safe; longest trip for Asanda",
+        "Near CPT airport on the N2 — neutral and closest to Khayelitsha, but not much of a hangout",
+        "Logistics: Uber Asanda to the spot (matches the 'transport → Uber' plan in Costs) instead of Matt driving in to pick him up; work around his dialysis days"
+      ],
+      "notes": "Pick 1–2 regular spots once there. Ask Asanda what he'd like."
+    },
+    {
       "id": "sa-jewish-contact",
       "title": "Find Dad's SA Jewish community contact",
       "status": "todo",

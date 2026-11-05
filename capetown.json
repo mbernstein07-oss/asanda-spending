@@ -162,7 +162,7 @@
       "details": [
         "At the counter: ask for the Windscreen, Tyre and Third Party Damage Waiver (~R96/day) to lift third-party liability above the standard ~R6,000,000 cap",
         "Can't be pre-booked — international rate, so it's added at pickup only",
-        "Flight lands Nov 7 at 6 PM but pickup is Nov 8 — need a ride from CPT to Gardens on arrival night",
+        "Arrival night Nov 7: Uber from CPT to Gardens (and Uber back to CPT for the Nov 8 noon pickup)",
         "Drop-off booked for 8:00 PM Nov 21 on purpose (buffer for delays) — just return it early, ~5:00–5:30 PM, before UA2222 at 8:50 PM",
         "Oct 12 modification: VW Polo Vivo manual → Toyota Corolla Quest or similar, automatic. Est. total $401.21 ($262.34 prepaid, ~$138.87 due at pickup) — waiver add-on not included"
       ],
@@ -348,7 +348,7 @@
   ],
   "calendar": [
     { "date": "2026-11-06", "title": "UA1122 departs EWR 8:35 PM", "type": "travel", "notes": "Overnight to Cape Town" },
-    { "date": "2026-11-07", "title": "Land CPT 6:00 PM", "type": "travel", "notes": "No car until tomorrow — arrange a ride to Gardens" },
+    { "date": "2026-11-07", "title": "Land CPT 6:00 PM", "type": "travel", "notes": "Uber to Gardens" },
     { "date": "2026-11-07", "title": "Airbnb check-in (after 3 PM)", "type": "stay", "notes": "Secret Sunsets in Gardens · host Gary" },
     { "date": "2026-11-08", "title": "Avis pickup, CPT airport", "type": "car", "notes": "12:00 PM. Ask for the Windscreen / Tyre / 3rd Party Damage Waiver" },
     { "date": "2026-11-08", "title": "V&A Waterfront live music", "type": "fun", "notes": "Free" },

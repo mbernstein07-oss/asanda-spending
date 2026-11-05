@@ -340,6 +340,20 @@
       "notes": ""
     },
     {
+      "id": "renal-orgs",
+      "title": "Renal / Kidney Organizations",
+      "status": "todo",
+      "summary": "Cape Town kidney-related non-profits that could help Asanda (funding, support, volunteering). Researched Nov 5 2026 — confirm details directly.",
+      "details": [
+        "★ Cape Kidney Association (CKA) — non-profit founded 1978 by nephrology doctors & nurses; raises funds for indigent kidney patients. Wynberg (28 Londonderry Rd). capekidney.org.za. Runs 'Kilometres for Kidneys' at the Cape Town Cycle Tour. Best lead: possible help with costs, and a volunteering fit for Asanda",
+        "National Kidney Foundation of SA (NKFSA) — national awareness/education body (est. 1967); active Facebook page; ask about Western Cape branches or local patient groups",
+        "Organ Donor Foundation (ODF) — national NPO for donor awareness/registration, partners with Western Cape Health. Toll-free 0800 22 66 11. Awareness, not patient support",
+        "Dialysis Support & Talk — support group linking clinicians/academics with dialysis patients; contact details not found",
+        "SA Transplant Sports Association — national; only a Gauteng affiliate found, nothing in Western Cape yet (relevant post-transplant)"
+      ],
+      "notes": "Ties into Volunteering, GoFundMe and Trust items. Ask the nephrologist and Louise (Netcare) which of these their patients actually use."
+    },
+    {
       "id": "social-worker",
       "title": "Find Asanda a Social Worker",
       "status": "todo",

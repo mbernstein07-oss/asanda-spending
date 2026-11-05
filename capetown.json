@@ -139,20 +139,27 @@
       "status": "planning",
       "summary": "People and organizations to see while in Cape Town.",
       "details": [
-        "Sokoyi family",
-        "Ndlagalavu family",
-        "Wewe",
-        "Afro",
-        "Muneez",
-        "Karl",
-        "Chris Campbell Memorial Field",
-        "Maji",
-        "Asanda's transplant coordinator — Louise Human, Netcare (Louise.Human@netcare.co.za). Offered to visit (Oct 7); no reply since Jun 26 — see Transplant List item",
-        "Asanda's doctor",
-        "Asanda's therapist",
-        "Marcell Fourie, VDMA Law (Kingsbury case attorney) — Matt offered to meet in person (Oct 16), awaiting reply"
+        "CARE — Asanda's nephrologist (his main doctor)",
+        "CARE — Asanda's therapist",
+        "CARE — Social worker — need to find one first (see Find Asanda a Social Worker)",
+        "CARE — Louise Human, Netcare transplant coordinator (Louise.Human@netcare.co.za). Offered to visit Oct 7; no reply since Jun 26 — likely go in person with Asanda (see Transplant List item)",
+        "CARE — Pharmacist — Clicks vs Medipost double-dispensing + Sep rejections (see Meds Review)",
+        "CARE — Dialysis unit (Mr TS Jugdeo) — could help get the waiting-list bloods done",
+        "MONEY/LEGAL — Momentum office visit (see Momentum plan item for agenda)",
+        "MONEY/LEGAL — Marcell Fourie + Hazel Jacobs, VDMA Law (Kingsbury case). Matt offered to meet Oct 16, no reply on meeting yet",
+        "FRIENDS — Sokoyi family",
+        "FRIENDS — Ndlagalavu family",
+        "FRIENDS — Wewe",
+        "FRIENDS — Afro",
+        "FRIENDS — Muneez (maybe)",
+        "FRIENDS — Karl (maybe)",
+        "FRIENDS — Maji",
+        "FRIENDS — Chris Campbell Memorial Field — visit with Sipho (see Connect with Sipho)",
+        "FRIENDS — Kwakhanya (hopefully — find once there)",
+        "MAYBE — Volunteering organization for Asanda, depending on how conversations with him go",
+        "MAYBE — Xhosa speaker to review the translated Story"
       ],
-      "notes": ""
+      "notes": "Full list confirmed Nov 5. Messaging/booking not started yet."
     },
     {
       "id": "car",
@@ -192,7 +199,9 @@
       "title": "Connect with Sipho",
       "status": "todo",
       "summary": "Connect with Sipho while in Cape Town.",
-      "details": [],
+      "details": [
+        "Visit the Chris Campbell Memorial Field together"
+      ],
       "notes": "Do this once there."
     },
     {
